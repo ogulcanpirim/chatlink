@@ -1,0 +1,3 @@
+docker run —rm -d -p 2717:27017 -v ~/Desktop/docker-express/mongodb:/data/db --name mymongo mongo:latest
+docker exec -it mymongo bash
+windows: docker run -d -p 2717:27017 -v ${pwd}:/data/db --name mymongo mongo:latest
