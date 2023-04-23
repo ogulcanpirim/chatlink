@@ -15,7 +15,6 @@ This is my first MERN full-stack responsive chat application.
 ![mongodb](https://img.shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square)&nbsp;
 
 ## 🚀 Features
-#
 - Login/Register
 - User Avatars
 - Form Chat
@@ -23,7 +22,6 @@ This is my first MERN full-stack responsive chat application.
 - Skeleton Loaders
 
 ### My LinkedIn Profile
-#
 [![linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ogulcan-pirim)
 
 © 2023 Oğulcan Pirim
