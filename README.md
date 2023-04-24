@@ -4,7 +4,7 @@ This is my first MERN full-stack responsive chat application.
 
 ## 🖥️ Used Technologies
 
-![docker](https://img.shields.io/badge/Docker-3178C6?style=for-the-badge&logo=docker&logoColor=white)&nbsp;
+![docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![reactjs](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)&nbsp;
 ![typescript](https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)&nbsp;
 ![mongodb](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)&nbsp;
