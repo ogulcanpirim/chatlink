@@ -1,6 +1,9 @@
 # dependencies
 /node_modules
-server/node_modules
+server/express/node_modules
+
+#server
+server/mongodb
 
 # local env files
 config.env
