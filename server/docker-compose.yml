@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+    mongo:
+        ports:
+            - '2717:27017'
+        volumes:
+            - './mongodb:/data/db'
+        container_name: chatlink_mongo
+        image: 'mongo:latest'
