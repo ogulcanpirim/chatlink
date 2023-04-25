@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "client": "cd client && yarn && yarn dev",
+    "build": "cd client && yarn && yarn build",
     "server": "cd server/express && yarn && yarn start",
     "mongo": "cd server && docker-compose up -d",
     "stop": "cd server && docker-compose stop"
