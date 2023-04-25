@@ -2,6 +2,12 @@
   "name": "chatlink",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "client": "cd client && yarn && yarn dev",
+    "server": "cd server/express && yarn && yarn start",
+    "mongo": "cd server && docker-compose up -d",
+    "stop": "cd server && docker-compose stop"
+  },
   "author": "Ogulcan Pirim",
   "license": "MIT"
 }
