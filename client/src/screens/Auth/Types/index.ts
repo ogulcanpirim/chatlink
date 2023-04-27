@@ -11,3 +11,8 @@ export interface RegisterForm {
   password: string;
   repassword: string;
 }
+
+export interface IUserTags {
+  user_tag: string;
+  friend_tag: string;
+}

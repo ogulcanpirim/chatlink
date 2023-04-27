@@ -5,6 +5,7 @@ import usersRouter from "./routes/users.js";
 import authRouter from "./routes/auth.js";
 import chatRouter from "./routes/chat.js";
 import messageRouter from "./routes/message.js";
+import friendRouter from "./routes/friends.js";
 import { Server } from "socket.io";
 
 mongoose.connect("mongodb://localhost:2717", {
@@ -69,7 +70,7 @@ app.use("/user", usersRouter);
 app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
 app.use("/message", messageRouter);
-app.use("/friend", messageRouter);
+app.use("/friend", friendRouter);
 
 app.listen(3000, () => {
   console.log("Server running on port 3000");

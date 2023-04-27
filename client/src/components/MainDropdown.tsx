@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { deleteUser } from "../store/reducers/authReducer";
 import {
   resetPage,
+  setFriendTagModal,
   toggleDarkMode,
   toggleHeaderModal,
 } from "../store/reducers/pageReducer";
@@ -32,7 +33,7 @@ const MainDropdown = () => {
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <div className="absolute z-20 mt-8 mr-4 right-0 top-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 focus:bg-red-500">
+      <div className="absolute z-20 origin-top-right mt-10 mr-10 right-0 top-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 focus:bg-red-500">
         <ul
           className="py-2 text-sm text-gray-700 dark:text-gray-200"
           aria-labelledby="dropdownDefaultButton"
@@ -42,15 +43,21 @@ const MainDropdown = () => {
               href="#"
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
             >
-              Dashboard
+              Settings
             </a>
           </li>
           <li>
             <a
-              href="#"
+              id="mainDropdownAddFriend"
+              href="/"
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(toggleHeaderModal());
+                dispatch(setFriendTagModal(true));
+              }}
             >
-              Settings
+              Add a Friend
             </a>
           </li>
           <li>

@@ -26,6 +26,12 @@ const userSchema = new Schema({
     trim: true,
     minlength: 6,
   },
+  tag: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 6,
+  },
   friends: [
     {
       type: Schema.Types.ObjectId,

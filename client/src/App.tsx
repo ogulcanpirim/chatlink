@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./screens/Auth/Login";
 import Register from "./screens/Auth/Register";
 import Home from "./screens/Home/Home";
-import FriendModal from "./components/FriendModal";
+import FriendTagModal from "./components/FriendTagModal";
+import FriendsModal from "./components/FriendsModal";
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
+        <FriendsModal />
+        <FriendTagModal />
       </BrowserRouter>
-      <FriendModal />
     </>
   );
 }

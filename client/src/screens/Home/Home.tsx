@@ -104,8 +104,8 @@ const Home = () => {
     <div className={`flex h-screen ${darkMode && "dark"}`}>
       <div className={"h-screen flex-col flex-nowrap basis-1/5 min-w-[%50]"}>
         <ChatListHeader />
-        <SearchBar />
         <div className="bg-gray-100 h-screen overflow-y-auto dark:bg-gray-900">
+          <SearchBar />
           <ChatList socket={socketRef.current as Socket} />
         </div>
         <BottomBar />

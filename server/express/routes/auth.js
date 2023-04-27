@@ -2,6 +2,7 @@ import { checkUser } from "../middleware/user.js";
 import User from "../models/user.js";
 import { Router } from "express";
 const router = Router();
+import crypto from "crypto";
 
 //login
 router.post("/login", async (req, res) => {
@@ -56,6 +57,7 @@ router.post("/register", checkUser, async (req, res) => {
     password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    tag: crypto.randomBytes(3).toString("hex").toUpperCase(),
   });
   try {
     const newUser = await user.save();

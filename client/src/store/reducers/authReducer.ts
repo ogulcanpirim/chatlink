@@ -1,12 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { LoginRequest, RegisterRequest } from "../actions/authActions";
+import {
+  AcceptFriendRequest,
+  LoginRequest,
+  RegisterRequest,
+  RejectFriendRequest,
+  SendFriendRequest,
+} from "../actions/authActions";
 
 interface IUser {
+  _id: string;
   username: string;
   email: string;
   firstName: string;
   lastName: string;
+  tag: string;
+  pendingRequests: IUser[];
 }
 
 interface AuthState {
@@ -61,7 +70,42 @@ const authSlicer = createSlice({
           state.error = false;
           localStorage.setItem("user", JSON.stringify(state.user));
         }
-      );
+      )
+      .addCase(SendFriendRequest.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(SendFriendRequest.fulfilled, (state, action) => {
+        console.log(
+          "send friend request fulfilled with action: ",
+          action.payload.data
+        );
+        state.loading = false;
+      })
+      .addCase(SendFriendRequest.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(AcceptFriendRequest.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(AcceptFriendRequest.fulfilled, (state, action) => {
+        const friend_id = action.payload.data;
+        state.user?.pendingRequests.filter((user) => user._id !== friend_id);
+        state.loading = false;
+      })
+      .addCase(AcceptFriendRequest.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(RejectFriendRequest.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(RejectFriendRequest.fulfilled, (state, action) => {
+        const friend_id = action.payload.data;
+        state.user?.pendingRequests.filter((user) => user._id !== friend_id);
+        state.loading = false;
+      })
+      .addCase(RejectFriendRequest.rejected, (state) => {
+        state.loading = false;
+      });
   },
 });
 

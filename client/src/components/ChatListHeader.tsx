@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import logo from "../assets/logo.png";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useDispatch } from "react-redux";
@@ -11,9 +11,7 @@ import friendsLogo from "../assets/friends.svg";
 import MainDropdown from "./MainDropdown";
 
 const ChatListHeader = () => {
-  const { darkMode, headerModal, friendModal } = useAppSelector(
-    (state) => state.page
-  );
+  const { darkMode, headerModal } = useAppSelector((state) => state.page);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const dispatch = useDispatch();
@@ -32,7 +30,7 @@ const ChatListHeader = () => {
             <div className="items-center justify-center">
               <button
                 onClick={() => {
-                  dispatch(setFriendModal(!friendModal));
+                  dispatch(setFriendModal(true));
                 }}
                 className={`rounded-full p-2 cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600
               }`}
@@ -61,9 +59,9 @@ const ChatListHeader = () => {
                 </div>
               </button>
             </div>
-            <MainDropdown />
           </div>
         </nav>
+        <MainDropdown />
       </header>
     </div>
   );
