@@ -7,3 +7,4 @@ server/mongodb
 
 # local env files
 config.env
+server/express/.env

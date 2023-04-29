@@ -7,7 +7,10 @@ import chatRouter from "./routes/chat.js";
 import messageRouter from "./routes/message.js";
 import friendRouter from "./routes/friends.js";
 import { Server } from "socket.io";
+import { delay } from "./middleware/pause.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 mongoose.connect("mongodb://localhost:2717", {
   useNewUrlParser: true,
 });
@@ -22,6 +25,12 @@ db.once("open", function () {
 
 const app = express();
 
+console.log(process.env.NODE_ENV);
+
+const env = process.env.NODE_ENV || "development";
+if (env !== "development") {
+  app.use(delay);
+}
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 

@@ -24,6 +24,10 @@ router.post("/request/send", checkUserTags, async (req, res) => {
   console.log("res.user.friends:", res.user.friends);
   try {
     console.log("res.friend.pendingRequests:", res.friend.pendingRequests);
+    console.log(
+      "res.friend.pendingRequests.includes(user_id):",
+      res.friend.pendingRequests.includes(user_id)
+    );
     if (res.user.friends.includes(friend_id))
       return res.status(400).json({ message: "Friend already added" });
     else if (res.friend.pendingRequests.includes(user_id))

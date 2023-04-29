@@ -77,11 +77,12 @@ const authSlicer = createSlice({
       .addCase(SendFriendRequest.fulfilled, (state, action) => {
         console.log(
           "send friend request fulfilled with action: ",
-          action.payload.data
+          action.payload
         );
         state.loading = false;
       })
-      .addCase(SendFriendRequest.rejected, (state) => {
+      .addCase(SendFriendRequest.rejected, (state, action) => {
+        console.log("send friend request rejected with action: ", action.payload);
         state.loading = false;
       })
       .addCase(AcceptFriendRequest.pending, (state) => {
