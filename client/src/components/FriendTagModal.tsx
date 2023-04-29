@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+
 import { setFriendTagModal } from "../store/reducers/pageReducer";
 import { useAppSelector } from "../hooks/useAppSelector";
 import copyLogo from "../assets/copy.svg";
@@ -9,14 +9,14 @@ import { QRCode } from "react-qrcode-logo";
 import logo from "../assets/logo.png";
 import qr from "../assets/qr.svg";
 import { Portal, Transition } from "@headlessui/react";
-import { AppDispatch } from "../store";
+import { useAppDispatch } from "../store";
 import { SendFriendRequest } from "../store/actions/authActions";
 
 const FriendTagModal = () => {
   const { friendTagModal, darkMode } = useAppSelector((state) => state.page);
   const { loading } = useAppSelector((state) => state.auth);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [copy, setCopy] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [show, setShow] = useState(true);

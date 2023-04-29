@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { useDispatch } from "react-redux";
 import { setFriendModal } from "../store/reducers/pageReducer";
 import PendingFriendCard from "./PendingFriendCard";
 import { Portal, Transition } from "@headlessui/react";
+import { useAppDispatch } from "../store";
 
 const FriendsModal = () => {
   const { friendModal, darkMode } = useAppSelector((state) => state.page);
   const [show, setShow] = useState(true);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [pendingRequest, setPendingRequest] = React.useState<any>([
     1, 2, 3, 4, 5, 6, 7, 8, 9,

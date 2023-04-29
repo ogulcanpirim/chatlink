@@ -4,19 +4,18 @@ import lightLogo from "../../assets/light-mode.svg";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { toggleDarkMode } from "../../store/reducers/pageReducer";
-import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { LoginForm } from "./Types";
 import { useCallback, useEffect } from "react";
 import { LoginValidationSchema } from "./Validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoginRequest } from "../../store/actions/authActions";
-import { AppDispatch } from "../../store";
+import { useAppDispatch } from "../../store";
 
 const Login = () => {
   const { darkMode } = useAppSelector((state) => state.page);
   const { loading, user, error } = useAppSelector((state) => state.auth);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const {

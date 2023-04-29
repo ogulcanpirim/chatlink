@@ -22,9 +22,15 @@ interface AuthState {
   user: IUser | null;
   loading: boolean;
   error: boolean;
+  errorMessage: string | null;
 }
 
-const initialState: AuthState = { user: null, loading: false, error: false };
+const initialState: AuthState = {
+  user: null,
+  loading: false,
+  error: false,
+  errorMessage: null,
+};
 
 const authSlicer = createSlice({
   name: "page",
@@ -82,7 +88,7 @@ const authSlicer = createSlice({
         state.loading = false;
       })
       .addCase(SendFriendRequest.rejected, (state, action) => {
-        console.log("send friend request rejected with action: ", action.payload);
+        console.log("send friend request rejected with action: ", action);
         state.loading = false;
       })
       .addCase(AcceptFriendRequest.pending, (state) => {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import rightArrow from "../assets/right-arrow.svg";
-import { useDispatch } from "react-redux";
 import { IChatListItem, setSelectedChat } from "../store/reducers/pageReducer";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../hooks/useAppSelector";
+import { useAppDispatch } from "../store";
 
 interface ChatCardProps {
   socket: Socket;
@@ -17,7 +17,7 @@ interface SocketTypeData {
 }
 
 const ChatCard = ({ socket, selected, chat }: ChatCardProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [typing, setTyping] = useState(false);
   const { chatSearch } = useAppSelector((state) => state.page);
   const handleChatSelect = () => {

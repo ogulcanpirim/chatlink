@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Transition } from "@headlessui/react";
-import { useDispatch } from "react-redux";
 import { deleteUser } from "../store/reducers/authReducer";
 import {
   resetPage,
@@ -9,10 +8,11 @@ import {
   toggleDarkMode,
   toggleHeaderModal,
 } from "../store/reducers/pageReducer";
+import { useAppDispatch } from "../store";
 
 const MainDropdown = () => {
   const { headerModal, darkMode } = useAppSelector((state) => state.page);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleSignOut = () => {
     dispatch(deleteUser());
     dispatch(resetPage());

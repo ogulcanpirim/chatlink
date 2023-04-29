@@ -1,11 +1,11 @@
 import React from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { setChatSearch } from "../store/reducers/pageReducer";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../store";
 
 const SearchBar = () => {
   const { chatSearch } = useAppSelector((state) => state.page);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="p-2 border-b-1 border-gray-100 dark:border-gray-700">

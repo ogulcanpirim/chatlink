@@ -5,8 +5,9 @@ import {
   clearSelectedChat,
   toggleChatModal,
 } from "../store/reducers/pageReducer";
-import { useDispatch } from "react-redux";
+
 import { useIsMobile } from "../hooks/isMobile";
+import { useAppDispatch } from "../store";
 
 interface UserHeaderProps {
   name: string;
@@ -16,7 +17,7 @@ interface UserHeaderProps {
 const UserHeader = ({ name, typing }: UserHeaderProps) => {
   const { darkMode, chatModal } = useAppSelector((state) => state.page);
   const isMobile = useIsMobile();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return (
     <div className={`relative ${darkMode && "dark"}`}>
       <header>

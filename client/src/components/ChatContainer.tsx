@@ -6,8 +6,7 @@ import { useAppSelector } from "../hooks/useAppSelector";
 import ScrollButton from "./ScrollButton";
 import EmptyChatContainer from "./EmptyChatContainer";
 import ChatDropdown from "./ChatDropdown";
-import { AppDispatch } from "../store";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../store";
 import { SendChatMessageRequest } from "../store/actions/pageActions";
 import { IMessage, IMessageAPI } from "../store/reducers/pageReducer";
 import { Socket } from "socket.io-client";
@@ -25,7 +24,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
   const { darkMode, selectedChat, chatMessages } = useAppSelector(
     (state) => state.page
   );
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
   const [emojiPicker, setEmojiPicker] = useState(false);

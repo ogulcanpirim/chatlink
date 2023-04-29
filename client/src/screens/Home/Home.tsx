@@ -11,15 +11,15 @@ import {
   toggleChatModal,
   toggleHeaderModal,
 } from "../../store/reducers/pageReducer";
-import { useDispatch } from "react-redux";
 import SearchBar from "../../components/SearchBar";
 import { useIsMobile } from "../../hooks/isMobile";
 import {
   GetChatMessagesRequest,
   GetChatRequest,
 } from "../../store/actions/pageActions";
-import { AppDispatch } from "../../store";
+
 import { io, Socket } from "socket.io-client";
+import { useAppDispatch } from "../../store";
 
 const Home = () => {
   const { darkMode, headerModal, chatModal, selectedChat } = useAppSelector(
@@ -29,7 +29,7 @@ const Home = () => {
   const socketRef = useRef<Socket>();
   const user = localStorage.getItem("user");
   const isMobile = useIsMobile();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const handleModal = (e: MouseEvent) => {
     const target = e.target;

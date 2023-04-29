@@ -1,7 +1,6 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { useDispatch } from "react-redux";
 import {
   setFriendModal,
   toggleHeaderModal,
@@ -9,12 +8,13 @@ import {
 import moreLogo from "../assets/three-dots.svg";
 import friendsLogo from "../assets/friends.svg";
 import MainDropdown from "./MainDropdown";
+import { useAppDispatch } from "../store";
 
 const ChatListHeader = () => {
   const { darkMode, headerModal } = useAppSelector((state) => state.page);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className={`relative shrink-0 ${darkMode && "dark"}`}>

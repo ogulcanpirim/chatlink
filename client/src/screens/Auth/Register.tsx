@@ -3,7 +3,6 @@ import darkLogo from "../../assets/dark-mode.svg";
 import lightLogo from "../../assets/light-mode.svg";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/useAppSelector";
-import { useDispatch } from "react-redux";
 import { toggleDarkMode } from "../../store/reducers/pageReducer";
 import { useForm } from "react-hook-form";
 import { RegisterForm } from "./Types";
@@ -11,12 +10,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RegisterValidationSchema } from "./Validation";
 import { useCallback, useEffect } from "react";
 import { RegisterRequest } from "../../store/actions/authActions";
-import { AppDispatch } from "../../store";
+import { useAppDispatch } from "../../store";
 
 const Register = () => {
   const { darkMode } = useAppSelector((state) => state.page);
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     register,

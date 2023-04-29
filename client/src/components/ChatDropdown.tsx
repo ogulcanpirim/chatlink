@@ -1,15 +1,15 @@
 import React, { Fragment } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Transition } from "@headlessui/react";
-import { useDispatch } from "react-redux";
 import {
   clearSelectedChat,
   toggleChatModal,
 } from "../store/reducers/pageReducer";
+import { useAppDispatch } from "../store";
 
 const ChatDropdown = () => {
   const { chatModal } = useAppSelector((state) => state.page);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return (
     <Transition
       as={Fragment}
