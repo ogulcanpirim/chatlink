@@ -40,6 +40,12 @@ const authSlicer = createSlice({
       state.user = null;
       localStorage.removeItem("user");
     },
+    clearErrors(state) {
+      if (state.error) {
+        state.error = false;
+        state.errorMessage = null;
+      }
+    },
   },
   extraReducers(builder) {
     builder
@@ -57,7 +63,7 @@ const authSlicer = createSlice({
         (state, action: PayloadAction<{ data: IUser }>) => {
           state.user = action.payload.data;
           state.loading = false;
-          state.error = false;
+          authSlicer.caseReducers.clearErrors(state);
           localStorage.setItem("user", JSON.stringify(state.user));
         }
       )
@@ -73,7 +79,7 @@ const authSlicer = createSlice({
         (state, action: PayloadAction<{ data: IUser }>) => {
           state.user = action.payload.data;
           state.loading = false;
-          state.error = false;
+          authSlicer.caseReducers.clearErrors(state);
           localStorage.setItem("user", JSON.stringify(state.user));
         }
       )
@@ -85,10 +91,13 @@ const authSlicer = createSlice({
           "send friend request fulfilled with action: ",
           action.payload
         );
+        authSlicer.caseReducers.clearErrors(state);
         state.loading = false;
       })
       .addCase(SendFriendRequest.rejected, (state, action) => {
-        console.log("send friend request rejected with action: ", action);
+        state.errorMessage = action.payload as string;
+        console.log("state.errorMessage: ", state.errorMessage);
+        state.error = true;
         state.loading = false;
       })
       .addCase(AcceptFriendRequest.pending, (state) => {
@@ -116,5 +125,5 @@ const authSlicer = createSlice({
   },
 });
 
-export const { deleteUser } = authSlicer.actions;
+export const { deleteUser, clearErrors } = authSlicer.actions;
 export default authSlicer.reducer;

@@ -3,6 +3,7 @@ import logo from "../assets/logo.png";
 import { useAppSelector } from "../hooks/useAppSelector";
 import {
   setFriendModal,
+  setUserModal,
   toggleHeaderModal,
 } from "../store/reducers/pageReducer";
 import moreLogo from "../assets/three-dots.svg";
@@ -19,14 +20,23 @@ const ChatListHeader = () => {
   return (
     <div className={`relative shrink-0 ${darkMode && "dark"}`}>
       <header>
-        <nav className="z-10 bg-white drop-shadow-md border-gray-200 px-4 lg:px-6 py-2 dark:bg-gray-800">
+        <nav className="z-10 bg-white drop-shadow-md border-gray-200 px-4 lg:px-6 py-3 dark:bg-gray-800">
           <div className="flex flex-wrap justify-between items-center mx-auto relative">
-            <a href="#" className="flex items-center">
-              <img src={logo} className="mr-3 h-8" alt="Logo" />
+            <div className="flex items-center">
+              <img
+                onClick={() => {
+                  dispatch(setUserModal(true));
+                }}
+                src={
+                  "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg"
+                }
+                className="mr-3 h-8 rounded-full cursor-pointer"
+                alt="Logo"
+              />
               <span className="self-center text-lg text-black font-semibold whitespace-nowrap dark:text-white">
                 {user?.firstName + " " + user?.lastName}
               </span>
-            </a>
+            </div>
             <div className="items-center justify-center">
               <button
                 onClick={() => {

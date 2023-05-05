@@ -33,7 +33,7 @@ export const SendFriendRequest = createAsyncThunk(
       const response = await authService.SendFriendRequestService(data);
       return response;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data.message);
     }
   }
 );

@@ -4,6 +4,8 @@ import Register from "./screens/Auth/Register";
 import Home from "./screens/Home/Home";
 import FriendTagModal from "./components/FriendTagModal";
 import FriendsModal from "./components/FriendsModal";
+import Toast from "./components/Toast";
+import UserInfoModal from "./components/UserInfoModal";
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
+        <Toast />
         <FriendsModal />
         <FriendTagModal />
+        <UserInfoModal />
       </BrowserRouter>
     </>
   );

@@ -102,15 +102,18 @@ const Home = () => {
 
   return (
     <div className={`flex h-screen ${darkMode && "dark"}`}>
-      <div className={"h-screen flex-col flex-nowrap basis-1/5 min-w-[%50]"}>
+      <div
+        className={
+          "bg-gray-100 flex-col flex-nowrap basis-1/5 min-w-[%50] dark:bg-gray-900 overflow-hidden"
+        }
+      >
         <ChatListHeader />
-        <div className="bg-gray-100 h-screen overflow-y-auto dark:bg-gray-900">
-          <SearchBar />
+        <SearchBar />
+        <div className="h-screen overflow-y-auto">
           <ChatList socket={socketRef.current as Socket} />
         </div>
-        <BottomBar />
       </div>
-      <div className="grow basis-4/5">
+      <div className="basis-4/5">
         <ChatContainer socket={socketRef.current as Socket} />
       </div>
     </div>

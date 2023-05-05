@@ -29,14 +29,11 @@ router.post("/request/send", checkUserTags, async (req, res) => {
       res.friend.pendingRequests.includes(user_id)
     );
     if (res.user.friends.includes(friend_id))
-      return res.status(400).json({ message: "Friend already added" });
+      return res.status(400).json({ message: "Friend already added." });
     else if (res.friend.pendingRequests.includes(user_id))
-      return res.status(400).json({ message: "Friend request already sent" });
-    console.log("will push friend....");
+      return res.status(400).json({ message: "Friend request already sent." });
     res.friend.pendingRequests.push(user_id);
-    console.log("will save friend....");
     await res.friend.save();
-    console.log("res.user: ", res.user);
     const userData = {
       _id: res.user._id,
       email: res.user.email,
@@ -46,7 +43,6 @@ router.post("/request/send", checkUserTags, async (req, res) => {
     io.to(friend_id.toString()).emit("friendRequest", userData);
     return res.status(200).json({ data: friend_id });
   } catch (error) {
-    console.log("error: ", error.message);
     return res.status(500).json({ message: error.message });
   }
 });

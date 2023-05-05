@@ -27,6 +27,14 @@ const ChatList = ({ socket }: ChatListProps) => {
     }
   }, [chatSearch, chatList]);
 
+  if (filteredChatList.length === 0) {
+    return (
+      <div className="flex h-full justify-center items-center">
+        <h1 className="text-lg font-semibold text-gray-500">No Chats Found</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       {filteredChatList.map((chat, index) => {
@@ -39,13 +47,6 @@ const ChatList = ({ socket }: ChatListProps) => {
           />
         );
       })}
-      {filteredChatList.length === 0 && (
-        <div className="flex justify-center items-center h-96">
-          <h1 className="text-2xl font-semibold text-gray-500">
-            No Chats Found
-          </h1>
-        </div>
-      )}
     </div>
   );
 };

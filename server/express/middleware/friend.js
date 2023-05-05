@@ -7,8 +7,11 @@ export async function checkUserTags(req, res, next) {
   try {
     user = await User.findOne({ tag: user_tag });
     friend = await User.findOne({ tag: friend_tag });
-    if (!user || !friend)
-      return res.status(404).json({ message: "User or friend not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist." });
+    }
+    if (!friend)
+      return res.status(404).json({ message: "Friend does not exist." });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
