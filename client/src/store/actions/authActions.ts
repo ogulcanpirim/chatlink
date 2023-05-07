@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { authService } from "../services/authService";
 import { IUserTags, LoginForm, RegisterForm } from "../../screens/Auth/Types";
+import { AvatarForm } from "../reducers/authReducer";
 
 export const LoginRequest = createAsyncThunk(
   "auth/login",
@@ -55,6 +56,30 @@ export const RejectFriendRequest = createAsyncThunk(
   async (data: IUserTags, thunkAPI) => {
     try {
       const response = await authService.RejectFriendRequestService(data);
+      return response;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.status);
+    }
+  }
+);
+
+export const UploadProfilePictureRequest = createAsyncThunk(
+  "auth/uploadProfilePicture",
+  async (data: AvatarForm, thunkAPI) => {
+    try {
+      const response = await authService.UploadProfilePictureService(data);
+      return response;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.status);
+    }
+  }
+);
+
+export const DeleteProfilePictureRequest = createAsyncThunk(
+  "auth/deleteProfilePicture",
+  async (id: string, thunkAPI) => {
+    try {
+      const response = await authService.DeleteProfilePictureService(id);
       return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.status);

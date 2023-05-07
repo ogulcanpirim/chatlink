@@ -4,7 +4,7 @@ import { IChatListItem, setSelectedChat } from "../store/reducers/pageReducer";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../store";
-
+import defaultAvatar from "../assets/default-avatar.png";
 interface ChatCardProps {
   socket: Socket;
   chat: IChatListItem;
@@ -38,8 +38,8 @@ const ChatCard = ({ socket, selected, chat }: ChatCardProps) => {
     typing && setTimeout(() => setTyping(false), 1000);
   }, [typing]);
 
-  const user = localStorage.getItem("user");
-  const user_id = user ? JSON.parse(user)._id : null;
+  const userData = localStorage.getItem("user");
+  const user_id = userData ? JSON.parse(userData)._id : null;
   const otherUser = chat.users.find((user) => user._id !== user_id);
   const name = otherUser
     ? otherUser.firstName + " " + otherUser.lastName
@@ -82,8 +82,8 @@ const ChatCard = ({ socket, selected, chat }: ChatCardProps) => {
       <div className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <img
-            className="w-12 h-12 rounded-full"
-            src={`https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg`}
+            className="object-cover w-12 h-12 rounded-full"
+            src={otherUser?.avatar || defaultAvatar}
             alt="User Avatar"
           />
         </div>

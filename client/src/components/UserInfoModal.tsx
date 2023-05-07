@@ -4,23 +4,29 @@ import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../store";
 import { setUserModal } from "../store/reducers/pageReducer";
 import photo from "../assets/photo.svg";
-import info from "../assets/info.svg";
+import { UploadProfilePictureRequest } from "../store/actions/authActions";
+import defaultAvatar from "../assets/default-avatar.png";
+import trash from "../assets/trash.svg";
 
 const UserInfoModal = () => {
   const { darkMode, userModal } = useAppSelector((state) => state.page);
+  const { user } = useAppSelector((state) => state.auth);
   const [show, setShow] = useState(true);
-  const [image, setImage] = useState<string>("");
   const dispatch = useAppDispatch();
+  const userData = localStorage.getItem("user");
+  const user_id = userData ? JSON.parse(userData)._id : null;
 
   const handleImageSelect = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files) {
         const selectedFile = event.target.files[0];
         const reader = new FileReader();
-        reader.onload = (event) => {
-          setImage(event.target?.result as string);
-        };
         reader.readAsDataURL(selectedFile);
+        const data = {
+          avatar: selectedFile,
+          id: user_id,
+        };
+        dispatch(UploadProfilePictureRequest(data));
       }
     },
     []
@@ -60,12 +66,9 @@ const UserInfoModal = () => {
             <div className="flex flex-col items-center pt-8">
               <div className="relative group">
                 <img
-                  src={
-                    image ||
-                    "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg"
-                  }
+                  src={user?.avatar || defaultAvatar}
                   alt="user avatar"
-                  className="rounded-full w-28 h-28 group-hover:opacity-40 transition-opacity duration-300"
+                  className="object-cover rounded-full w-28 h-28 group-hover:opacity-40 transition-opacity duration-300"
                 />
                 <div className="absolute hidden group-hover:flex flex-col inset-0 items-center justify-center transition-opacity duration-300">
                   <label
@@ -91,9 +94,9 @@ const UserInfoModal = () => {
                 </div>
               </div>
               <div className="text-xl mt-2 text-black dark:text-white">
-                Oğulcan Pirim
+                {user?.firstName + " " + user?.lastName}
               </div>
-              <div className="text-md">opirim@gmail.com</div>
+              <div className="text-md text-gray-500">{user?.email}</div>
             </div>
             <div className="flex flex-row justify-around mt-4 rounded-b-lg py-4">
               <div className="flex flex-col items-center space-y-1">
@@ -122,8 +125,4 @@ const UserInfoModal = () => {
   );
 };
 
-/*
-You can change your profile picture by hovering over it. Only
-                .jpg and .png files are accepted.
-*/
 export default React.memo(UserInfoModal);

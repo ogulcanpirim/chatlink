@@ -20,6 +20,7 @@ import {
 
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch } from "../../store";
+import { setUser } from "../../store/reducers/authReducer";
 
 const Home = () => {
   const { darkMode, headerModal, chatModal, selectedChat } = useAppSelector(
@@ -27,7 +28,7 @@ const Home = () => {
   );
 
   const socketRef = useRef<Socket>();
-  const user = localStorage.getItem("user");
+  const userData = localStorage.getItem("user");
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
 
@@ -54,8 +55,12 @@ const Home = () => {
 
   //get user chat(s)
   useEffect(() => {
-    user && dispatch(GetChatRequest(JSON.parse(user)._id));
-  }, [user]);
+    if (userData) {
+      const user = JSON.parse(userData);
+      dispatch(GetChatRequest(user._id));
+      dispatch(setUser(user));
+    }
+  }, [userData]);
 
   //fetch chat messages
   useEffect(() => {
@@ -67,7 +72,7 @@ const Home = () => {
     socketRef.current = io(import.meta.env.VITE_SOCKET_URL);
     socketRef.current.on("connect", () => {
       console.log("connected");
-      socketRef.current?.emit("setup", user);
+      socketRef.current?.emit("setup", userData);
     });
     socketRef.current.on("disconnect", () => {
       console.log("disconnected");
@@ -75,9 +80,9 @@ const Home = () => {
     socketRef.current.on("message", (data: IMessage) => {
       dispatch(appendMessage(data));
     });
-  }, [user]);
+  }, [userData]);
 
-  if (!user) {
+  if (!userData) {
     return <Navigate to={"/login"} />;
   }
 

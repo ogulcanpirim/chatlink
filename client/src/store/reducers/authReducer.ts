@@ -2,20 +2,27 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   AcceptFriendRequest,
+  DeleteProfilePictureRequest,
   LoginRequest,
   RegisterRequest,
   RejectFriendRequest,
   SendFriendRequest,
+  UploadProfilePictureRequest,
 } from "../actions/authActions";
 
-interface IUser {
+export interface IUser {
   _id: string;
   username: string;
   email: string;
   firstName: string;
   lastName: string;
+  avatar: string | null;
   tag: string;
   pendingRequests: IUser[];
+}
+export interface AvatarForm {
+  avatar: File;
+  id: string;
 }
 
 interface AuthState {
@@ -36,6 +43,10 @@ const authSlicer = createSlice({
   name: "page",
   initialState,
   reducers: {
+    setUser(state, action) {
+      console.log("setUser", action.payload);
+      state.user = action.payload;
+    },
     deleteUser(state) {
       state.user = null;
       localStorage.removeItem("user");
@@ -87,16 +98,11 @@ const authSlicer = createSlice({
         state.loading = true;
       })
       .addCase(SendFriendRequest.fulfilled, (state, action) => {
-        console.log(
-          "send friend request fulfilled with action: ",
-          action.payload
-        );
         authSlicer.caseReducers.clearErrors(state);
         state.loading = false;
       })
       .addCase(SendFriendRequest.rejected, (state, action) => {
         state.errorMessage = action.payload as string;
-        console.log("state.errorMessage: ", state.errorMessage);
         state.error = true;
         state.loading = false;
       })
@@ -121,9 +127,36 @@ const authSlicer = createSlice({
       })
       .addCase(RejectFriendRequest.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(UploadProfilePictureRequest.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(UploadProfilePictureRequest.fulfilled, (state, action) => {
+        if (state.user) {
+          const newAvatar = action.payload.data.avatar;
+          state.user = { ...state.user, avatar: newAvatar };
+          localStorage.setItem("user", JSON.stringify(state.user));
+        }
+        state.loading = false;
+      })
+      .addCase(UploadProfilePictureRequest.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(DeleteProfilePictureRequest.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(DeleteProfilePictureRequest.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user = { ...state.user, avatar: null };
+          localStorage.setItem("user", JSON.stringify(state.user));
+        }
+        state.loading = false;
+      })
+      .addCase(DeleteProfilePictureRequest.rejected, (state, action) => {
+        state.loading = false;
       });
   },
 });
 
-export const { deleteUser, clearErrors } = authSlicer.actions;
+export const { setUser, deleteUser, clearErrors } = authSlicer.actions;
 export default authSlicer.reducer;

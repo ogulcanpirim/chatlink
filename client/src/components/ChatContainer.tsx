@@ -24,6 +24,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
   const { darkMode, selectedChat, chatMessages } = useAppSelector(
     (state) => state.page
   );
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
@@ -88,10 +89,10 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
     return <EmptyChatContainer />;
   }
 
-  const user = localStorage.getItem("user");
+  const userData = localStorage.getItem("user");
 
   const isUser = (user_id: string) => {
-    return user && JSON.parse(user)._id === user_id;
+    return userData && JSON.parse(userData)._id === user_id;
   };
 
   const otherUser = selectedChat?.users.find((user) => !isUser(user._id));
@@ -106,6 +107,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
     <div className="relative h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
       <UserHeader
         name={otherUser?.firstName + " " + otherUser?.lastName}
+        avatar={otherUser?.avatar as string}
         typing={typing}
       />
       <div id="scrollContainer" className="overflow-auto p-4 h-screen">
@@ -113,6 +115,9 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
           <ChatBubble
             key={index.toString()}
             username={username(message)}
+            avatar={String(
+              !!isUser(message.user_id) ? user?.avatar : otherUser?.avatar
+            )}
             message={message.content}
             time={message.createdAt}
             isUser={!!isUser(message.user_id)}
@@ -188,7 +193,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
               socket.emit("typing", {
                 chat_id: selectedChat?._id,
                 users: selectedChat?.users.map((user) => user._id),
-                user_id: user && JSON.parse(user)._id,
+                user_id: userData && JSON.parse(userData)._id,
               });
               setText(e.target.value);
             }}

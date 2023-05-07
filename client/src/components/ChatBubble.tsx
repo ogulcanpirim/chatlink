@@ -1,9 +1,11 @@
 import React from "react";
 import moment from "moment";
 import { useAppSelector } from "../hooks/useAppSelector";
+import defaultAvatar from "../assets/default-avatar.png";
 
 interface ChatBubbleProps {
   username: string;
+  avatar: string | null;
   message: string;
   time: string;
   isUser: boolean;
@@ -12,6 +14,7 @@ interface ChatBubbleProps {
 
 const ChatBubble = ({
   username,
+  avatar,
   message,
   time,
   isUser,
@@ -23,9 +26,7 @@ const ChatBubble = ({
     <div className={`z-10 chat ${isUser ? "chat-end" : "chat-start"}`}>
       <div className="chat-image avatar">
         <div className="w-8 rounded-full">
-          <img
-            src={`https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg`}
-          />
+          <img src={avatar || defaultAvatar} />
         </div>
       </div>
       <div className="chat-header text-black dark:text-white py-1">
@@ -34,9 +35,7 @@ const ChatBubble = ({
           {moment(time).format("HH:mm")}
         </time>
       </div>
-      <div
-        className={`chat-bubble ${isUser && "chat-bubble-primary"}`}
-      >
+      <div className={`chat-bubble ${isUser && "chat-bubble-primary"}`}>
         {message}
       </div>
       {delivered && (

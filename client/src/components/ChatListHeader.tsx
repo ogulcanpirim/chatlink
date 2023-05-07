@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "../assets/logo.png";
 import { useAppSelector } from "../hooks/useAppSelector";
 import {
   setFriendModal,
@@ -10,11 +9,13 @@ import moreLogo from "../assets/three-dots.svg";
 import friendsLogo from "../assets/friends.svg";
 import MainDropdown from "./MainDropdown";
 import { useAppDispatch } from "../store";
+import defaultAvatar from "../assets/default-avatar.png";
 
 const ChatListHeader = () => {
   const { darkMode, headerModal } = useAppSelector((state) => state.page);
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   return (
@@ -27,14 +28,12 @@ const ChatListHeader = () => {
                 onClick={() => {
                   dispatch(setUserModal(true));
                 }}
-                src={
-                  "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg"
-                }
-                className="mr-3 h-8 rounded-full cursor-pointer"
+                src={user?.avatar || defaultAvatar}
+                className="object-cover mr-3 h-8 w-8 rounded-full cursor-pointer"
                 alt="Logo"
               />
               <span className="self-center text-lg text-black font-semibold whitespace-nowrap dark:text-white">
-                {user?.firstName + " " + user?.lastName}
+                {userData?.firstName + " " + userData?.lastName}
               </span>
             </div>
             <div className="items-center justify-center">

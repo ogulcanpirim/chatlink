@@ -8,13 +8,15 @@ import {
 
 import { useIsMobile } from "../hooks/isMobile";
 import { useAppDispatch } from "../store";
+import defaultAvatar from "../assets/default-avatar.png";
 
 interface UserHeaderProps {
   name: string;
+  avatar: string | null;
   typing: boolean;
 }
 
-const UserHeader = ({ name, typing }: UserHeaderProps) => {
+const UserHeader = ({ name, avatar, typing }: UserHeaderProps) => {
   const { darkMode, chatModal } = useAppSelector((state) => state.page);
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
@@ -39,13 +41,11 @@ const UserHeader = ({ name, typing }: UserHeaderProps) => {
                   />
                 </button>
               )}
-              <div className="w-10 h-10">
-                <img
-                  className="rounded-full"
-                  src={`https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg`}
-                  alt="User Avatar"
-                />
-              </div>
+              <img
+                className="object-cover w-10 h-10 rounded-full"
+                src={avatar || defaultAvatar}
+                alt="User Avatar"
+              />
             </div>
             <div className="flex flex-col ml-2">
               <span className="self-center text-md text-black whitespace-nowrap dark:text-white">

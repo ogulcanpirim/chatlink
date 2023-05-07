@@ -5,6 +5,13 @@ server/express/node_modules
 #server
 server/mongodb
 
-# local env files
+#local env files
 config.env
 server/express/.env
+
+#Mac
+.DS_Store
+server/express/.DS_Store
+
+#uploads
+server/public/*

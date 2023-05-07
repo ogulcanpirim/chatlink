@@ -20,6 +20,12 @@ const userSchema = new Schema({
     trim: true,
     minlength: 3,
   },
+  avatar: {
+    type: String,
+    required: false,
+    trim: true,
+    default: null,
+  },
   password: {
     type: String,
     required: true,

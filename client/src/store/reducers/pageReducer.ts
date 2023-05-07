@@ -5,6 +5,7 @@ import {
   GetChatRequest,
   SendChatMessageRequest,
 } from "../actions/pageActions";
+import { IUser } from "./authReducer";
 
 export interface IMessageAPI {
   user_id: string;
@@ -14,14 +15,7 @@ export interface IMessageAPI {
 
 export interface IChatListItem {
   _id: string;
-  users: [
-    {
-      _id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-    }
-  ];
+  users: IUser[];
   latestMessage: IMessage;
 }
 

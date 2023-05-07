@@ -1,6 +1,20 @@
 import { Router } from "express";
 const router = Router();
 import { getUser } from "../middleware/user.js";
+import multer from "multer";
+import path from "path";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "../public/avatars/");
+  },
+  filename: (req, file, cb) => {
+    const id = req.params.id;
+    cb(null, `${id}-avatar` + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
 
 //get user
 router.get("/:id", getUser, (req, res) => {
@@ -31,6 +45,34 @@ router.delete("/:id", getUser, async (res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+//update avatar
+router.patch(
+  "/:id/update-avatar",
+  upload.single("image"),
+  getUser,
+  async (req, res) => {
+    res.user.avatar = `http://localhost:3000/public/avatars/${req.file.filename}`;
+    console.log("res.user.avatar", res.user.avatar);
+    try {
+      await res.user.save();
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+    res.status(200).json({ data: { avatar: res.user.avatar } });
+  }
+);
+
+//delete avatar
+router.delete("/:id/delete-avatar", getUser, async (req, res) => {
+  res.user.avatar = null;
+  try {
+    await res.user.save();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+  res.status(200).json({ data: { message: "Avatar deleted." } });
 });
 
 export default router;
