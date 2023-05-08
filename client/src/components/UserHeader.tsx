@@ -9,17 +9,21 @@ import {
 import { useIsMobile } from "../hooks/isMobile";
 import { useAppDispatch } from "../store";
 import defaultAvatar from "../assets/default-avatar.png";
+import useCheckUserOnline from "../hooks/checkUserOnline";
 
 interface UserHeaderProps {
   name: string;
+  id: string;
   avatar: string | null;
   typing: boolean;
 }
 
-const UserHeader = ({ name, avatar, typing }: UserHeaderProps) => {
+const UserHeader = ({ name, id, avatar, typing }: UserHeaderProps) => {
   const { darkMode, chatModal } = useAppSelector((state) => state.page);
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
+  const online = useCheckUserOnline(id);
+
   return (
     <div className={`relative ${darkMode && "dark"}`}>
       <header>
@@ -41,18 +45,23 @@ const UserHeader = ({ name, avatar, typing }: UserHeaderProps) => {
                   />
                 </button>
               )}
-              <img
-                className="object-cover w-10 h-10 rounded-full"
-                src={avatar || defaultAvatar}
-                alt="User Avatar"
-              />
+              <div className="relative">
+                <img
+                  className="object-cover w-10 h-10 rounded-full"
+                  src={avatar || defaultAvatar}
+                  alt="User Avatar"
+                />
+                {online && (
+                  <div className="absolute bottom-0 right-0 flex items-center justify-center w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
+                )}
+              </div>
             </div>
             <div className="flex flex-col ml-2">
               <span className="self-center text-md text-black whitespace-nowrap dark:text-white">
                 {name}
               </span>
-              <span className="text-sm opacity-50">
-                {typing ? "Typing..." : "Online"}
+              <span className="text-sm text-gray-500">
+                {typing ? "Typing..." : online ? "Online" : "Offline"}
               </span>
             </div>
             <div className="flex flex-row items-center ml-auto space-x-2">

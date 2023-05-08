@@ -44,7 +44,6 @@ const authSlicer = createSlice({
   initialState,
   reducers: {
     setUser(state, action) {
-      console.log("setUser", action.payload);
       state.user = action.payload;
     },
     deleteUser(state) {
@@ -62,12 +61,10 @@ const authSlicer = createSlice({
     builder
       .addCase(LoginRequest.pending, (state) => {
         state.loading = true;
-        console.log("login request pending");
       })
       .addCase(LoginRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        console.log("login request failed");
       })
       .addCase(
         LoginRequest.fulfilled,
@@ -134,6 +131,7 @@ const authSlicer = createSlice({
       .addCase(UploadProfilePictureRequest.fulfilled, (state, action) => {
         if (state.user) {
           const newAvatar = action.payload.data.avatar;
+          console.log("newAvatar", newAvatar);
           state.user = { ...state.user, avatar: newAvatar };
           localStorage.setItem("user", JSON.stringify(state.user));
         }

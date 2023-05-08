@@ -2,7 +2,7 @@ import { Portal, Transition } from "@headlessui/react";
 import React, { useCallback, useState } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../store";
-import { setUserModal } from "../store/reducers/pageReducer";
+import { setAlertModal, setUserModal } from "../store/reducers/pageReducer";
 import photo from "../assets/photo.svg";
 import { UploadProfilePictureRequest } from "../store/actions/authActions";
 import defaultAvatar from "../assets/default-avatar.png";
@@ -68,17 +68,17 @@ const UserInfoModal = () => {
                 <img
                   src={user?.avatar || defaultAvatar}
                   alt="user avatar"
-                  className="object-cover rounded-full w-28 h-28 group-hover:opacity-40 transition-opacity duration-300"
+                  className="object-cover rounded-full w-28 h-28 group-hover:opacity-40"
                 />
-                <div className="absolute hidden group-hover:flex flex-col inset-0 items-center justify-center transition-opacity duration-300">
+                <div className="absolute hidden group-hover:flex flex-col rounded-full inset-0 overflow-hidden">
                   <label
                     htmlFor="file-input"
-                    className="cursor-pointer flex flex-col items-center justify-center space-y-1"
+                    className="basis-3/4 cursor-pointer flex flex-col items-center justify-center space-y-1"
                   >
                     <img
                       src={photo}
                       alt="change avatar"
-                      className="w-6 h-6 select-none group-hover:cursor-pointer"
+                      className="w-4 h-4 select-none group-hover:cursor-pointer"
                     />
                     <input
                       id="file-input"
@@ -91,6 +91,23 @@ const UserInfoModal = () => {
                       Change Your Avatar
                     </span>
                   </label>
+                  <div
+                    onClick={() => {
+                      dispatch(setAlertModal(true));
+                    }}
+                    className="group-hover:cursor-pointer basis-1/4 bg-red-500 bg-opacity-70 text-white"
+                  >
+                    <svg
+                      fill="currentColor"
+                      width="800px"
+                      height="800px"
+                      viewBox="0 0 24 24"
+                      className="w-4 h-4 select-none m-auto mt-1"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M5.755,20.283,4,8H20L18.245,20.283A2,2,0,0,1,16.265,22H7.735A2,2,0,0,1,5.755,20.283ZM21,4H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V4H3A1,1,0,0,0,3,6H21a1,1,0,0,0,0-2Z" />
+                    </svg>
+                  </div>
                 </div>
               </div>
               <div className="text-xl mt-2 text-black dark:text-white">

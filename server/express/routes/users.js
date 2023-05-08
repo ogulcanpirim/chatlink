@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const id = req.params.id;
-    cb(null, `${id}-avatar` + path.extname(file.originalname));
+    cb(null, `${id}-${Date.now()}-avatar` + path.extname(file.originalname));
   },
 });
 
@@ -53,14 +53,14 @@ router.patch(
   upload.single("image"),
   getUser,
   async (req, res) => {
-    res.user.avatar = `http://localhost:3000/public/avatars/${req.file.filename}`;
-    console.log("res.user.avatar", res.user.avatar);
+    const newAvatar = `http://localhost:3000/public/avatars/${req.file.filename}`;
+    res.user.avatar = newAvatar;
     try {
       await res.user.save();
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
-    res.status(200).json({ data: { avatar: res.user.avatar } });
+    res.status(200).json({ data: { avatar: newAvatar } });
   }
 );
 

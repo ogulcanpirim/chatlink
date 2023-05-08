@@ -21,7 +21,7 @@ const ChatListHeader = () => {
   return (
     <div className={`relative shrink-0 ${darkMode && "dark"}`}>
       <header>
-        <nav className="z-10 bg-white drop-shadow-md border-gray-200 px-4 lg:px-6 py-3 dark:bg-gray-800">
+        <nav className="z-10 bg-white drop-shadow-md border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
           <div className="flex flex-wrap justify-between items-center mx-auto relative">
             <div className="flex items-center">
               <img
@@ -29,7 +29,7 @@ const ChatListHeader = () => {
                   dispatch(setUserModal(true));
                 }}
                 src={user?.avatar || defaultAvatar}
-                className="object-cover mr-3 h-8 w-8 rounded-full cursor-pointer"
+                className="object-cover mr-3 h-10 w-10 rounded-full cursor-pointer"
                 alt="Logo"
               />
               <span className="self-center text-lg text-black font-semibold whitespace-nowrap dark:text-white">

@@ -1,10 +1,9 @@
 import { Navigate } from "react-router-dom";
 import ChatList from "../../components/ChatList";
-import BottomBar from "../../components/BottomBar";
 import ChatListHeader from "../../components/ChatListHeader";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import ChatContainer from "../../components/ChatContainer";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect } from "react";
 import {
   IMessage,
   appendMessage,
@@ -17,17 +16,16 @@ import {
   GetChatMessagesRequest,
   GetChatRequest,
 } from "../../store/actions/pageActions";
-
-import { io, Socket } from "socket.io-client";
 import { useAppDispatch } from "../../store";
 import { setUser } from "../../store/reducers/authReducer";
+import useSocket from "../../hooks/useSocket";
 
 const Home = () => {
   const { darkMode, headerModal, chatModal, selectedChat } = useAppSelector(
     (state) => state.page
   );
 
-  const socketRef = useRef<Socket>();
+  const socket = useSocket();
   const userData = localStorage.getItem("user");
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
@@ -67,20 +65,14 @@ const Home = () => {
     selectedChat && dispatch(GetChatMessagesRequest(selectedChat._id));
   }, [selectedChat]);
 
-  //socket.io
+  //socket.io message
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_SOCKET_URL);
-    socketRef.current.on("connect", () => {
-      console.log("connected");
-      socketRef.current?.emit("setup", userData);
-    });
-    socketRef.current.on("disconnect", () => {
-      console.log("disconnected");
-    });
-    socketRef.current.on("message", (data: IMessage) => {
-      dispatch(appendMessage(data));
-    });
-  }, [userData]);
+    if (socket) {
+      socket.on("message", (data: IMessage) => {
+        dispatch(appendMessage(data));
+      });
+    }
+  }, [socket]);
 
   if (!userData) {
     return <Navigate to={"/login"} />;
@@ -94,12 +86,11 @@ const Home = () => {
             <ChatListHeader />
             <SearchBar />
             <div className="bg-gray-100 h-screen overflow-y-auto dark:bg-gray-500">
-              <ChatList socket={socketRef.current as Socket} />
+              <ChatList />
             </div>
-            <BottomBar />
           </Fragment>
         ) : (
-          <ChatContainer socket={socketRef.current as Socket} />
+          <ChatContainer />
         )}
       </div>
     );
@@ -115,11 +106,11 @@ const Home = () => {
         <ChatListHeader />
         <SearchBar />
         <div className="h-screen overflow-y-auto">
-          <ChatList socket={socketRef.current as Socket} />
+          <ChatList />
         </div>
       </div>
       <div className="basis-4/5">
-        <ChatContainer socket={socketRef.current as Socket} />
+        <ChatContainer />
       </div>
     </div>
   );

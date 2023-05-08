@@ -43,6 +43,7 @@ interface PageState {
   friendTagModal: boolean;
   friendTag: string;
   userModal: boolean;
+  alertModal: boolean;
 }
 
 const initialState: PageState = {
@@ -60,6 +61,7 @@ const initialState: PageState = {
   friendTagModal: false,
   friendTag: "",
   userModal: false,
+  alertModal: false,
 };
 
 const pageSlicer = createSlice({
@@ -95,6 +97,9 @@ const pageSlicer = createSlice({
     },
     setUserModal: (state, action: PayloadAction<boolean>) => {
       state.userModal = action.payload;
+    },
+    setAlertModal: (state, action: PayloadAction<boolean>) => {
+      state.alertModal = action.payload;
     },
     setSelectedChat: (state, action: PayloadAction<IChatListItem>) => {
       state.selectedChat = action.payload;
@@ -170,6 +175,7 @@ export const {
   setFriendTag,
   setFriendTagModal,
   setUserModal,
+  setAlertModal,
   setSelectedChat,
   clearSelectedChat,
   setChatSearch,

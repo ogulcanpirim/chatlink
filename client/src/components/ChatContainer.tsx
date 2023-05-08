@@ -9,18 +9,13 @@ import ChatDropdown from "./ChatDropdown";
 import { useAppDispatch } from "../store";
 import { SendChatMessageRequest } from "../store/actions/pageActions";
 import { IMessage, IMessageAPI } from "../store/reducers/pageReducer";
-import { Socket } from "socket.io-client";
-
-interface ChatContainerProps {
-  socket: Socket;
-}
-
+import useSocket from "../hooks/useSocket";
 interface SocketTypeData {
   chat_id: string;
   user_id: string;
 }
 
-const ChatContainer = ({ socket }: ChatContainerProps) => {
+const ChatContainer = () => {
   const { darkMode, selectedChat, chatMessages } = useAppSelector(
     (state) => state.page
   );
@@ -29,6 +24,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
   const [emojiPicker, setEmojiPicker] = useState(false);
+  const socket = useSocket();
 
   const onMessageSubmit = (e: any) => {
     e.preventDefault();
@@ -78,11 +74,13 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
   }, [typing]);
 
   useEffect(() => {
-    socket.on("typing", (data: SocketTypeData) => {
-      if (data.chat_id === selectedChat?._id && !typing) {
-        setTyping(true);
-      }
-    });
+    if (socket) {
+      socket.on("typing", (data: SocketTypeData) => {
+        if (data.chat_id === selectedChat?._id && !typing) {
+          setTyping(true);
+        }
+      });
+    }
   }, [socket, selectedChat, typing]);
 
   if (selectedChat === null) {
@@ -107,6 +105,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
     <div className="relative h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
       <UserHeader
         name={otherUser?.firstName + " " + otherUser?.lastName}
+        id={otherUser?._id as string}
         avatar={otherUser?.avatar as string}
         typing={typing}
       />
@@ -129,7 +128,7 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
       <ChatDropdown />
       <form onSubmit={onMessageSubmit}>
         {emojiPicker && (
-          <div className="z-10">
+          <div className="">
             <EmojiPicker
               onEmojiClick={handleEmojiClick}
               theme={darkMode ? Theme.DARK : Theme.LIGHT}
@@ -190,11 +189,13 @@ const ChatContainer = ({ socket }: ChatContainerProps) => {
               }
             }}
             onChange={(e) => {
-              socket.emit("typing", {
-                chat_id: selectedChat?._id,
-                users: selectedChat?.users.map((user) => user._id),
-                user_id: userData && JSON.parse(userData)._id,
-              });
+              if (socket) {
+                socket.emit("typing", {
+                  chat_id: selectedChat?._id,
+                  users: selectedChat?.users.map((user) => user._id),
+                  user_id: userData && JSON.parse(userData)._id,
+                });
+              }
               setText(e.target.value);
             }}
           ></textarea>

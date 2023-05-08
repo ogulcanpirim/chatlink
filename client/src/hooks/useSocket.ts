@@ -1,34 +1,35 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import io, { Socket } from "socket.io-client";
 
 const socketURL = import.meta.env.VITE_SOCKET_URL;
+let socket: Socket | null = null;
 
-const useSocket = (): [Socket | null, boolean] => {
-  const newSocket = useRef<Socket | null>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [connected, setConnected] = useState<boolean>(false);
-
-  useEffect(() => {
-    newSocket.current = io(socketURL);
-    setSocket(newSocket.current);
-    return () => {
-      newSocket.current?.close();
-    };
-  }, [socketURL]);
+const useSocket = (): Socket => {
+  const userData = localStorage.getItem("user");
+  const user = userData ? JSON.parse(userData) : null;
 
   useEffect(() => {
-    if (socket) {
-      socket.on("connect", () => {
-        setConnected(true);
+    if (!socket) {
+      socket = io(socketURL, {
+        query: {
+          user: user?._id,
+        },
       });
-
+      socket.on("connect", () => {
+        console.log("socket connected");
+        socket?.emit("setup", userData);
+      });
       socket.on("disconnect", () => {
-        setConnected(false);
+        console.log("socket disconnected");
       });
     }
-  }, [socket]);
+    return () => {
+      socket?.close();
+      socket = null;
+    };
+  }, []);
 
-  return [socket, connected];
+  return socket as Socket;
 };
 
 export default useSocket;

@@ -51,11 +51,24 @@ export const io = new Server(3001, {
   },
 });
 
+const socketUsers = {};
 io.on("connection", (socket) => {
+  const id = socket.handshake.query.user;
+  socket.broadcast.emit("online", id);
+
   socket.on("setup", (userData) => {
     const user = JSON.parse(userData);
     if (user) {
+      socketUsers[user._id] = socket.id;
       socket.join(user._id);
+    }
+  });
+
+  socket.on("checkUserOnline", (user) => {
+    if (socketUsers[user]) {
+      socket.emit("online", user);
+    } else {
+      socket.emit("offline", user);
     }
   });
 
@@ -77,11 +90,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-
-  socket.off("setup", () => {
-    socket.leave(userData._id);
+    socket.broadcast.emit("offline", id);
+    delete socketUsers[id];
   });
 });
 

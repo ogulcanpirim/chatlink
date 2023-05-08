@@ -6,6 +6,7 @@ import FriendTagModal from "./components/FriendTagModal";
 import FriendsModal from "./components/FriendsModal";
 import Toast from "./components/Toast";
 import UserInfoModal from "./components/UserInfoModal";
+import AlertModal from "./components/AlertModal";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <FriendsModal />
         <FriendTagModal />
         <UserInfoModal />
+        <AlertModal />
       </BrowserRouter>
     </>
   );

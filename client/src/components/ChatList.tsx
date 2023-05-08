@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import ChatCard from "./ChatCard";
-import { Socket } from "socket.io-client";
 
-interface ChatListProps {
-  socket: Socket;
-}
-const ChatList = ({ socket }: ChatListProps) => {
+const ChatList = () => {
   const { selectedChat, chatList, chatSearch } = useAppSelector(
     (state) => state.page
   );
@@ -41,7 +37,6 @@ const ChatList = ({ socket }: ChatListProps) => {
         return (
           <ChatCard
             key={index.toString()}
-            socket={socket}
             chat={chat}
             selected={selectedChat?._id === chat._id}
           />
