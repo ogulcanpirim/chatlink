@@ -1,10 +1,9 @@
 import io from "socket.io-client";
 
-const socketURL = import.meta.env.VITE_SOCKET_URL;
 const userData = localStorage.getItem("user");
 const user = userData ? JSON.parse(userData) : null;
 
-const socket = io(socketURL, {
+const socket = io({ 
   query: {
     user: user?._id,
   },

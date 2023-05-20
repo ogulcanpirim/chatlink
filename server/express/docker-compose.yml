@@ -5,6 +5,7 @@ services:
        - ogulcan
       ports:
        - '3000:3000'
+       - '3001:3001'
       container_name: server
       image: 'ogulcan/server:latest'
 

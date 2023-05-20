@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { createServer } from "http";
 import mongoose from "mongoose";
 import usersRouter from "./routes/users.js";
 import authRouter from "./routes/auth.js";
@@ -44,9 +45,10 @@ app.use(
   express.static(path.join(__dirname, "../public/avatars"))
 );
 
-export const io = new Server(3001, {
+const httpServer = createServer(app);
+export const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -101,6 +103,6 @@ app.use("/chat", chatRouter);
 app.use("/message", messageRouter);
 app.use("/friend", friendRouter);
 
-app.listen(3000, () => {
+httpServer.listen(3000, () => {
   console.log("Server running on port 3000");
 });
