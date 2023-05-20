@@ -1,13 +1,15 @@
-import React, { Fragment } from "react";
+import { Fragment, memo } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Transition } from "@headlessui/react";
-import {
-  clearSelectedChat,
-  toggleChatModal,
-} from "../store/reducers/pageReducer";
 import { useAppDispatch } from "../store";
+import { setChatModal, setUserModal } from "../store/reducers/pageReducer";
+import { IUser, setSelectedChat } from "../store/reducers/userReducer";
 
-const ChatDropdown = () => {
+interface ChatDropdownProps {
+  user: IUser;
+}
+
+const ChatDropdown = ({ user }: ChatDropdownProps) => {
   const { chatModal } = useAppSelector((state) => state.page);
   const dispatch = useAppDispatch();
   return (
@@ -32,7 +34,8 @@ const ChatDropdown = () => {
               id="chatDropdownContactInfo"
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(toggleChatModal());
+                dispatch(setUserModal(user));
+                dispatch(setChatModal(false));
               }}
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
             >
@@ -45,7 +48,7 @@ const ChatDropdown = () => {
               id="chatDropdownCloseChat"
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(clearSelectedChat());
+                dispatch(setSelectedChat(null));
               }}
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
             >
@@ -58,4 +61,4 @@ const ChatDropdown = () => {
   );
 };
 
-export default React.memo(ChatDropdown);
+export default memo(ChatDropdown);

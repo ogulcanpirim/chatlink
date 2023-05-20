@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import arrowDown from "../assets/arrow-down.svg";
 import { Transition } from "@headlessui/react";
 
@@ -52,4 +52,4 @@ const ScrollButton = () => {
   );
 };
 
-export default React.memo(ScrollButton);
+export default ScrollButton;

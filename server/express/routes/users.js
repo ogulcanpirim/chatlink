@@ -60,7 +60,9 @@ router.patch(
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
-    res.status(200).json({ data: { avatar: newAvatar } });
+    res
+      .status(200)
+      .json({ data: { avatar: newAvatar, message: "Avatar updated." } });
   }
 );
 

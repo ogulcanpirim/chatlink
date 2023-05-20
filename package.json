@@ -6,8 +6,8 @@
     "client": "cd client && yarn && yarn dev",
     "build": "cd client && yarn && yarn build",
     "server": "cd server/express && yarn && yarn start",
-    "mongo": "cd server && docker-compose up -d",
-    "stop": "cd server && docker-compose stop"
+    "mongo": "docker compose -f server/docker-compose.yml up -d",
+    "stop": "docker compose -f server/docker-compose.yml down"
   },
   "author": "Ogulcan Pirim",
   "license": "MIT",

@@ -3,14 +3,15 @@ import darkLogo from "../../assets/dark-mode.svg";
 import lightLogo from "../../assets/light-mode.svg";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/useAppSelector";
-import { toggleDarkMode } from "../../store/reducers/pageReducer";
+import { setDarkMode } from "../../store/reducers/pageReducer";
 import { useForm } from "react-hook-form";
 import { RegisterForm } from "./Types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RegisterValidationSchema } from "./Validation";
 import { useCallback, useEffect } from "react";
-import { RegisterRequest } from "../../store/actions/authActions";
+import { RegisterRequest } from "../../store/actions/userActions";
 import { useAppDispatch } from "../../store";
+import { clearErrors } from "../../store/reducers/userReducer";
 
 const Register = () => {
   const { darkMode } = useAppSelector((state) => state.page);
@@ -24,7 +25,7 @@ const Register = () => {
     resolver: yupResolver(RegisterValidationSchema),
   });
 
-  const { loading, user, error } = useAppSelector((state) => state.auth);
+  const { loading, user, error } = useAppSelector((state) => state.user);
 
   const onSubmit = useCallback(
     (data: RegisterForm) => {
@@ -63,8 +64,7 @@ const Register = () => {
                 <img
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch(toggleDarkMode());
-                    localStorage.setItem("darkMode", JSON.stringify(!darkMode));
+                    dispatch(setDarkMode(!darkMode));
                   }}
                   className="w-8 h-8"
                   src={darkMode ? darkLogo : lightLogo}
@@ -82,11 +82,31 @@ const Register = () => {
                   >
                     Your email
                   </label>
-                  <input
-                    {...register("email")}
-                    className="bg-gray-50 mb-4 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="name@company.com"
-                  />
+                  <div className="mb-4">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg
+                          aria-hidden="true"
+                          className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                        </svg>
+                      </div>
+                      <input
+                        {...register("email")}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="name@chatlink.com"
+                      />
+                    </div>
+                    {errors.email && (
+                      <p className="mt-1 ml-2 text-xs text-red-800 dark:text-red-400 font-medium">
+                        {"*" + String(errors.email.message)}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex flex-wrap gap-2 justify-between">
                     <div>
                       <label
@@ -98,8 +118,13 @@ const Register = () => {
                       <input
                         {...register("firstName")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="John"
+                        placeholder="Robert"
                       />
+                      {errors.firstName && (
+                        <p className="mt-1 ml-2 text-xs text-red-800 dark:text-red-400 font-medium">
+                          {"*" + String(errors.firstName.message)}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label
@@ -111,8 +136,13 @@ const Register = () => {
                       <input
                         {...register("lastName")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Doe"
+                        placeholder="Junior"
                       />
+                      {errors.lastName && (
+                        <p className="mt-1 ml-2 text-xs text-red-800 dark:text-red-400 font-medium">
+                          {"*" + String(errors.lastName.message)}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -123,25 +153,90 @@ const Register = () => {
                   >
                     Password
                   </label>
-                  <input
-                    {...register("password")}
-                    placeholder="••••••••"
-                    type="password"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 64 64"
+                      >
+                        <path
+                          d="M45.863,33.863C47.223,30.852,48,27.52,48,24C48,10.746,37.254,0,24,0S0,10.746,0,24s10.746,24,24,24
+	                          c3.52,0,6.852-0.777,9.863-2.137L36,48h8v8h8v8h12V52L45.863,33.863z M24,32c-4.422,0-8-3.578-8-8s3.578-8,8-8s8,3.578,8,8 S28.422,32,24,32z"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      {...register("password")}
+                      placeholder="••••••••"
+                      type="password"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </div>
+                  {errors.password && (
+                    <p className="mt-1 ml-2 text-xs text-red-800 dark:text-red-400 font-medium">
+                      {"*" + String(errors.password.message)}
+                    </p>
+                  )}
                   <label
                     htmlFor="repassword"
                     className="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Re-enter Password
                   </label>
-                  <input
-                    {...register("repassword")}
-                    placeholder="••••••••"
-                    type="password"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 64 64"
+                      >
+                        <path
+                          d="M45.863,33.863C47.223,30.852,48,27.52,48,24C48,10.746,37.254,0,24,0S0,10.746,0,24s10.746,24,24,24
+	                          c3.52,0,6.852-0.777,9.863-2.137L36,48h8v8h8v8h12V52L45.863,33.863z M24,32c-4.422,0-8-3.578-8-8s3.578-8,8-8s8,3.578,8,8 S28.422,32,24,32z"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      {...register("repassword")}
+                      placeholder="••••••••"
+                      type="password"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </div>
+                  {errors.repassword && (
+                    <p className="mt-1 ml-2 text-xs text-red-800 dark:text-red-400 font-medium">
+                      {"*" + String(errors.repassword.message)}
+                    </p>
+                  )}
                 </div>
+                {error && (
+                  <div
+                    className="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-900 dark:text-red-400"
+                    role="alert"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="flex-shrink-0 inline w-5 h-5 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                    <span className="sr-only">Info</span>
+                    <div>
+                      <span className="font-medium">User already exists!</span>
+                      {"  "}
+                      Please check your credentials and try to login.
+                    </div>
+                  </div>
+                )}
                 <button
                   type="submit"
                   className="w-full mt-2 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -173,6 +268,7 @@ const Register = () => {
                   Do you have an account?{" "}
                   <a
                     onClick={() => {
+                      dispatch(clearErrors());
                       navigate("/login");
                     }}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"

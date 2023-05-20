@@ -1,12 +1,11 @@
-import React from "react";
+import { memo } from "react";
 import moment from "moment";
 import { useAppSelector } from "../hooks/useAppSelector";
 import defaultAvatar from "../assets/default-avatar.png";
-
 interface ChatBubbleProps {
   username: string;
-  avatar: string | null;
-  message: string;
+  avatar: string | null | undefined;
+  message: string | JSX.Element;
   time: string;
   isUser: boolean;
   delivered?: boolean;
@@ -35,7 +34,11 @@ const ChatBubble = ({
           {moment(time).format("HH:mm")}
         </time>
       </div>
-      <div className={`chat-bubble ${isUser && "chat-bubble-primary"}`}>
+      <div
+        className={`chat-bubble ${
+          isUser ? "chat-bubble-primary" : !darkMode && "chat-bubble-accent"
+        }`}
+      >
         {message}
       </div>
       {delivered && (
@@ -47,4 +50,4 @@ const ChatBubble = ({
   );
 };
 
-export default React.memo(ChatBubble);
+export default memo(ChatBubble);

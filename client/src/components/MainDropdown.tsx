@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Transition } from "@headlessui/react";
-import { deleteUser } from "../store/reducers/authReducer";
+import { deleteUser } from "../store/reducers/userReducer";
 import {
   resetPage,
+  setDarkMode,
   setFriendTagModal,
-  toggleDarkMode,
-  toggleHeaderModal,
+  setHeaderModal,
 } from "../store/reducers/pageReducer";
 import { useAppDispatch } from "../store";
 
@@ -19,8 +19,8 @@ const MainDropdown = () => {
   };
 
   const handleDarkMode = () => {
-    dispatch(toggleHeaderModal());
-    dispatch(toggleDarkMode());
+    dispatch(setHeaderModal(false));
+    dispatch(setDarkMode(!darkMode));
   };
   return (
     <Transition
@@ -33,19 +33,11 @@ const MainDropdown = () => {
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <div className="absolute z-20 origin-top-right mt-10 mr-10 right-0 top-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 focus:bg-red-500">
+      <div className="absolute z-10 origin-top-right mt-10 mr-10 right-0 top-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-800">
         <ul
           className="py-2 text-sm text-gray-700 dark:text-gray-200"
           aria-labelledby="dropdownDefaultButton"
         >
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Settings
-            </a>
-          </li>
           <li>
             <a
               id="mainDropdownAddFriend"
@@ -53,7 +45,7 @@ const MainDropdown = () => {
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(toggleHeaderModal());
+                dispatch(setHeaderModal(false));
                 dispatch(setFriendTagModal(true));
               }}
             >
@@ -92,4 +84,4 @@ const MainDropdown = () => {
   );
 };
 
-export default React.memo(MainDropdown);
+export default MainDropdown;

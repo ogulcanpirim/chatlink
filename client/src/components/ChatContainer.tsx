@@ -1,30 +1,91 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import ChatBubble from "./ChatBubble";
 import UserHeader from "./UserHeader";
-import EmojiPicker, { Theme } from "emoji-picker-react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import ScrollButton from "./ScrollButton";
 import EmptyChatContainer from "./EmptyChatContainer";
 import ChatDropdown from "./ChatDropdown";
 import { useAppDispatch } from "../store";
-import { SendChatMessageRequest } from "../store/actions/pageActions";
-import { IMessage, IMessageAPI } from "../store/reducers/pageReducer";
-import useSocket from "../hooks/useSocket";
+import {
+  IMessage,
+  IMessageAPI,
+  IUser,
+  setMessageSearch,
+} from "../store/reducers/userReducer";
+import { SendChatMessageRequest } from "../store/actions/userActions";
+import MessageSearchBar from "./MessageSearchBar";
+import { toast } from "react-toastify";
+import {
+  setEmojiModal,
+  setMessageSearchModal,
+} from "../store/reducers/pageReducer";
+import EmojiPicker, {
+  EmojiClickData,
+  EmojiStyle,
+  Theme,
+} from "emoji-picker-react";
+import socket from "../utils/socket";
+
+const MGS_CHAR_LIMIT = 1000;
 interface SocketTypeData {
   chat_id: string;
   user_id: string;
 }
 
 const ChatContainer = () => {
-  const { darkMode, selectedChat, chatMessages } = useAppSelector(
-    (state) => state.page
+  const { emojiModal, darkMode } = useAppSelector((state) => state.page);
+  const { user, selectedChat, chatMessages, messageSearch } = useAppSelector(
+    (state) => state.user
   );
-  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
-  const [emojiPicker, setEmojiPicker] = useState(false);
-  const socket = useSocket();
+  const [messages, setMessages] = useState<IMessage[]>(chatMessages);
+
+  useEffect(() => {
+    if (messageSearch) {
+      const filtered = chatMessages.filter((msg) => {
+        return msg.content.toLowerCase().includes(messageSearch.toLowerCase());
+      });
+      setMessages(filtered);
+    } else {
+      setMessages(chatMessages);
+    }
+  }, [messageSearch, chatMessages]);
+
+  const getHighlightedText = useCallback(
+    (text: string, highlight: string, isUser: boolean): JSX.Element => {
+      const parts: string[] = text.split(new RegExp(`(${highlight})`, "gi"));
+      return (
+        <span>
+          {" "}
+          {parts.map((part, i) => (
+            <span
+              key={i}
+              className={`${
+                part.toLowerCase() === highlight.toLowerCase() &&
+                `${
+                  isUser
+                    ? "text-red-300 dark:text-slate-900"
+                    : "text-green-800 dark:text-violet-600"
+                } font-bold dark:text-white`
+              }`}
+              style={part.toLowerCase() === highlight.toLowerCase() ? {} : {}}
+            >
+              {part}
+            </span>
+          ))}{" "}
+        </span>
+      );
+    },
+    []
+  );
 
   const onMessageSubmit = (e: any) => {
     e.preventDefault();
@@ -45,26 +106,20 @@ const ChatContainer = () => {
     setText("");
   };
 
-  const handleEmojiPress = () => {
-    setEmojiPicker((prev) => !prev);
-  };
-
-  const handleEmojiClick = (emoji: { unified: string }) => {
-    const sym = emoji.unified.split("-");
-    const codesArray: any[] = [];
-    sym.forEach((el) => codesArray.push("0x" + el));
-    const emojiStr = String.fromCodePoint(...codesArray);
-    setText((text) => text + emojiStr);
+  const handleEmojiClick = (emojiObject: EmojiClickData) => {
+    const chatInputElement = document.getElementById("chat");
+    if (!chatInputElement) return;
+    setText((prev) => prev + emojiObject.emoji);
   };
 
   useLayoutEffect(() => {
     const scrollContainer = document.getElementById("scrollContainer");
-    chatMessages.length > 0 &&
+    messages.length > 0 &&
       scrollContainer?.scroll({
         top: scrollContainer.scrollHeight,
         behavior: "smooth",
       });
-  }, [chatMessages]);
+  }, [messages]);
 
   useEffect(() => {
     typing &&
@@ -82,6 +137,14 @@ const ChatContainer = () => {
       });
     }
   }, [socket, selectedChat, typing]);
+
+  const emptySearch = useMemo(() => {
+    return (
+      messageSearch.length > 0 &&
+      messages.length === 0 &&
+      chatMessages.length > 0
+    );
+  }, [messageSearch, messages, chatMessages]);
 
   if (selectedChat === null) {
     return <EmptyChatContainer />;
@@ -109,32 +172,96 @@ const ChatContainer = () => {
         avatar={otherUser?.avatar as string}
         typing={typing}
       />
+      <MessageSearchBar />
       <div id="scrollContainer" className="overflow-auto p-4 h-screen">
-        {chatMessages.map((message, index) => (
-          <ChatBubble
-            key={index.toString()}
-            username={username(message)}
-            avatar={String(
-              !!isUser(message.user_id) ? user?.avatar : otherUser?.avatar
-            )}
-            message={message.content}
-            time={message.createdAt}
-            isUser={!!isUser(message.user_id)}
-            delivered
-          />
-        ))}
+        {emptySearch ? (
+          <div className="flex flex-col space-y-1 h-full items-center justify-center text-gray-500">
+            <svg className="w-8 h-8" viewBox="0 0 24 24" stroke="currentColor">
+              <title />
+              <g>
+                <g>
+                  <g>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    />
+                    <line
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      x1="12"
+                      x2="12"
+                      y1="12"
+                      y2="16"
+                    />
+                    <line
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      x1="12"
+                      x2="12"
+                      y1="8"
+                      y2="8"
+                    />
+                  </g>
+                </g>
+              </g>
+            </svg>
+            <div className="text-lg font-semibold">No Messages Found !</div>
+            <div
+              onClick={() => {
+                dispatch(setMessageSearch(""));
+                dispatch(setMessageSearchModal(false));
+              }}
+              className="cursor-pointer text-md font-semibold text-primary-600 hover:underline dark:text-primary-500"
+            >
+              Clear
+            </div>
+          </div>
+        ) : (
+          messages.map((message, index) => (
+            <ChatBubble
+              key={index.toString()}
+              username={username(message)}
+              avatar={
+                !!isUser(message.user_id) ? user?.avatar : otherUser?.avatar
+              }
+              message={
+                messageSearch.length > 0
+                  ? getHighlightedText(
+                      message.content,
+                      messageSearch,
+                      !!isUser(message.user_id)
+                    )
+                  : message.content
+              }
+              time={message.createdAt}
+              isUser={!!isUser(message.user_id)}
+              delivered
+            />
+          ))
+        )}
         <ScrollButton />
       </div>
-      <ChatDropdown />
+      <ChatDropdown user={otherUser as IUser} />
+      {emojiModal && (
+        <div
+          id="emojiModal"
+          className="z-10 absolute origin-center left-0 bottom-0 -translate-y-[58px]"
+        >
+          <EmojiPicker
+            onEmojiClick={handleEmojiClick}
+            emojiStyle={EmojiStyle.NATIVE}
+            theme={darkMode ? Theme.DARK : Theme.LIGHT}
+          />
+        </div>
+      )}
       <form onSubmit={onMessageSubmit}>
-        {emojiPicker && (
-          <div className="">
-            <EmojiPicker
-              onEmojiClick={handleEmojiClick}
-              theme={darkMode ? Theme.DARK : Theme.LIGHT}
-            />
-          </div>
-        )}
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
@@ -142,6 +269,14 @@ const ChatContainer = () => {
           <button
             type="button"
             className="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            onClick={() =>
+              toast.info(
+                <span>
+                  <span className="font-bold">Uploading Image</span> will be
+                  available soon!
+                </span>
+              )
+            }
           >
             <svg
               aria-hidden="true"
@@ -159,8 +294,13 @@ const ChatContainer = () => {
           </button>
           <button
             type="button"
-            className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-            onClick={handleEmojiPress}
+            className={`p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 ${
+              emojiModal &&
+              "bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white"
+            }`}
+            onClick={() => {
+              dispatch(setEmojiModal(!emojiModal));
+            }}
           >
             <svg
               aria-hidden="true"
@@ -184,6 +324,14 @@ const ChatContainer = () => {
             value={text}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                if (text.length >= MGS_CHAR_LIMIT) {
+                  toast.error(
+                    <span>
+                      Message limit is maximum{" "}
+                      <span className="font-bold">1000</span> characters.
+                    </span>
+                  );
+                }
                 text.length !== 0 && handleMessageSubmit(text);
                 e.preventDefault();
               }

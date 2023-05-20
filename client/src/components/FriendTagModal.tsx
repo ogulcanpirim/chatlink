@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import { setFriendTagModal } from "../store/reducers/pageReducer";
 import { useAppSelector } from "../hooks/useAppSelector";
 import copyLogo from "../assets/copy.svg";
@@ -10,11 +9,11 @@ import logo from "../assets/logo.png";
 import qr from "../assets/qr.svg";
 import { Portal, Transition } from "@headlessui/react";
 import { useAppDispatch } from "../store";
-import { SendFriendRequest } from "../store/actions/authActions";
+import { SendFriendRequest } from "../store/actions/userActions";
 
 const FriendTagModal = () => {
   const { friendTagModal, darkMode } = useAppSelector((state) => state.page);
-  const { loading } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.user);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const dispatch = useAppDispatch();
   const [copy, setCopy] = useState(false);
@@ -203,4 +202,4 @@ const FriendTagModal = () => {
   );
 };
 
-export default React.memo(FriendTagModal);
+export default FriendTagModal;

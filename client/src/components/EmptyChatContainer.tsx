@@ -1,4 +1,3 @@
-import React from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 
 const EmptyChatContainer = () => {
@@ -110,14 +109,15 @@ const EmptyChatContainer = () => {
       <span className="mt-4 self-center text-xl text-black font-semibold whitespace-nowrap dark:text-white">
         ChatLink
       </span>
-      <span className="mt-4 self-center text-l text-gray whitespace-nowrap">
+      <span className="mt-4 self-center text-l text-gray-500 whitespace-nowrap">
         You can begin a conversation by selecting a contact from the left panel.
       </span>
-      <span className="absolute bottom-5 text-sm text-gray">
-        Creator: Oğulcan Pirim
+      <span className="absolute bottom-5 text-sm text-black dark:text-white">
+        <span className="font-bold">Creator: </span>
+        Oğulcan Pirim
       </span>
     </div>
   );
 };
 
-export default React.memo(EmptyChatContainer);
+export default EmptyChatContainer;

@@ -3,18 +3,20 @@ import darkLogo from "../../assets/dark-mode.svg";
 import lightLogo from "../../assets/light-mode.svg";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/useAppSelector";
-import { toggleDarkMode } from "../../store/reducers/pageReducer";
+import { setDarkMode } from "../../store/reducers/pageReducer";
 import { useForm } from "react-hook-form";
 import { LoginForm } from "./Types";
 import { useCallback, useEffect } from "react";
 import { LoginValidationSchema } from "./Validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoginRequest } from "../../store/actions/authActions";
+import { LoginRequest } from "../../store/actions/userActions";
 import { useAppDispatch } from "../../store";
+import { toast } from "react-toastify";
+import { clearErrors } from "../../store/reducers/userReducer";
 
 const Login = () => {
   const { darkMode } = useAppSelector((state) => state.page);
-  const { loading, user, error } = useAppSelector((state) => state.auth);
+  const { loading, user, error } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -60,7 +62,7 @@ const Login = () => {
                 <img
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch(toggleDarkMode());
+                    dispatch(setDarkMode(!darkMode));
                   }}
                   className="w-8 h-8"
                   src={darkMode ? darkLogo : lightLogo}
@@ -92,7 +94,7 @@ const Login = () => {
                     </div>
                     <input
                       {...register("email")}
-                      placeholder="name@company.com"
+                      placeholder="name@chatlink.com"
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                   </div>
@@ -109,12 +111,27 @@ const Login = () => {
                   >
                     Password
                   </label>
-                  <input
-                    {...register("password")}
-                    type="password"
-                    placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 64 64"
+                      >
+                        <path
+                          d="M45.863,33.863C47.223,30.852,48,27.52,48,24C48,10.746,37.254,0,24,0S0,10.746,0,24s10.746,24,24,24
+	                          c3.52,0,6.852-0.777,9.863-2.137L36,48h8v8h8v8h12V52L45.863,33.863z M24,32c-4.422,0-8-3.578-8-8s3.578-8,8-8s8,3.578,8,8 S28.422,32,24,32z"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      {...register("password")}
+                      type="password"
+                      placeholder="••••••••"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </div>
                   {errors.password && (
                     <p className="mt-1 ml-2 text-xs text-red-800 dark:text-red-400 font-medium">
                       {"*" + String(errors.password.message)}
@@ -155,7 +172,7 @@ const Login = () => {
                         {...register("rememberMe")}
                         aria-describedby="remember"
                         type="checkbox"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                        className="w-4 h-4 border border-gray-300 rounded bg-red-500 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                       />
                     </div>
                     <div className="ml-3 text-sm">
@@ -168,7 +185,16 @@ const Login = () => {
                     </div>
                   </div>
                   <a
-                    href="#"
+                    href="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toast.info(
+                        <span>
+                          <span className="font-bold">Forgot password</span>{" "}
+                          will be available soon!
+                        </span>
+                      );
+                    }}
                     className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Forgot password?
@@ -205,6 +231,7 @@ const Login = () => {
                   Don’t have an account yet?{" "}
                   <a
                     onClick={() => {
+                      dispatch(clearErrors());
                       navigate("/register");
                     }}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"

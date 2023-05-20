@@ -1,15 +1,23 @@
-import React from "react";
+import { memo } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { setChatSearch } from "../store/reducers/pageReducer";
 import { useAppDispatch } from "../store";
+import { setChatSearch } from "../store/reducers/userReducer";
 
-const SearchBar = () => {
-  const { chatSearch } = useAppSelector((state) => state.page);
+interface SearchBarProps {
+  placeholder: string;
+  autoFocus?: boolean;
+}
+
+const SearchBar = ({ placeholder, autoFocus }: SearchBarProps) => {
+  const { chatSearch } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   return (
-    <div className="p-2 border-b-1 border-gray-100 dark:border-gray-700">
-      <form className="relative">
+    <div
+      id="searchBar"
+      className="p-2 bg-gray-100 dark:bg-gray-900 border-b-1 border-gray-100 dark:border-gray-700"
+    >
+      <form className="relative" onSubmit={(e) => e.preventDefault()}>
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <svg
             aria-hidden="true"
@@ -29,8 +37,9 @@ const SearchBar = () => {
         <input
           type="search"
           id="default-search"
+          autoFocus={autoFocus}
           className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Search in Chats..."
+          placeholder={placeholder}
           value={chatSearch}
           onChange={(e) => {
             dispatch(setChatSearch(e.target.value));
@@ -41,4 +50,4 @@ const SearchBar = () => {
   );
 };
 
-export default React.memo(SearchBar);
+export default memo(SearchBar);

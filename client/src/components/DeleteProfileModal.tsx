@@ -1,16 +1,19 @@
 import { Portal, Transition } from "@headlessui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../store";
-import { setAlertModal } from "../store/reducers/pageReducer";
-import trash from "../assets/trash.svg";
+import { setDeleteProfileModal } from "../store/reducers/pageReducer";
+import { DeleteProfilePictureRequest } from "../store/actions/userActions";
 
-const AlertModal = () => {
+const DeleteProfileModal = () => {
   const [show, setShow] = useState(true);
-  const { darkMode, alertModal } = useAppSelector((state) => state.page);
+  const { darkMode, deleteProfileModal } = useAppSelector(
+    (state) => state.page
+  );
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  if (!alertModal) {
+  if (!deleteProfileModal) {
     return null;
   }
 
@@ -36,7 +39,7 @@ const AlertModal = () => {
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-50"
           afterLeave={() => {
-            dispatch(setAlertModal(false));
+            dispatch(setDeleteProfileModal(false));
             setShow(true);
           }}
         >
@@ -61,13 +64,21 @@ const AlertModal = () => {
               <div className="flex flex-row justify-evenly w-full mt-4 px-16">
                 <button
                   type="button"
+                  onClick={() => {
+                    if (user) {
+                      dispatch(DeleteProfilePictureRequest(user._id));
+                    }
+                    setShow(false);
+                  }}
                   className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                 >
                   Delete
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShow(false)}
+                  onClick={() => {
+                    setShow(false);
+                  }}
                   className="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                 >
                   Cancel
@@ -81,4 +92,4 @@ const AlertModal = () => {
   );
 };
 
-export default React.memo(AlertModal);
+export default DeleteProfileModal;

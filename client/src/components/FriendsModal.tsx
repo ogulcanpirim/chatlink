@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { setFriendModal } from "../store/reducers/pageReducer";
 import PendingFriendCard from "./PendingFriendCard";
 import { Portal, Transition } from "@headlessui/react";
 import { useAppDispatch } from "../store";
+import { IUser } from "../store/reducers/userReducer";
 
 const FriendsModal = () => {
   const { friendModal, darkMode } = useAppSelector((state) => state.page);
+  const { user } = useAppSelector((state) => state.user);
+
+  const pendingRequests = user?.pendingRequests || [];
   const [show, setShow] = useState(true);
   const dispatch = useAppDispatch();
-
-  const [pendingRequest, setPendingRequest] = React.useState<any>([
-    1, 2, 3, 4, 5, 6, 7, 8, 9,
-  ]);
 
   if (!friendModal) {
     return null;
@@ -48,10 +48,23 @@ const FriendsModal = () => {
             <div className="text-black dark:text-white text-lg text-center font-semibold py-4 border-b-[0.1rem] border-b-gray-200 dark:border-b-gray-700">
               Pending Request
             </div>
+
             <div className="flex flex-col h-96 overflow-y-auto py-2">
-              {pendingRequest.map((item: number) => (
-                <PendingFriendCard key={item.toString()} />
-              ))}
+              {pendingRequests.length === 0 ? (
+                <div className="flex h-full items-center justify-center text-md text-gray-500">
+                  Friend requests will appear here
+                </div>
+              ) : (
+                pendingRequests.map((user: IUser) => (
+                  <PendingFriendCard
+                    key={user._id}
+                    avatar={user.avatar}
+                    fullName={`${user.firstName} ${user.lastName}`}
+                    email={user.email}
+                    friendTag={user.tag}
+                  />
+                ))
+              )}
             </div>
           </div>
         </Transition>
@@ -60,4 +73,4 @@ const FriendsModal = () => {
   );
 };
 
-export default React.memo(FriendsModal);
+export default FriendsModal;

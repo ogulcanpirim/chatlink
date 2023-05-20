@@ -9,6 +9,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  position: fixed;
+  width: 100%;
+}
+
+.EmojiPickerReact.epr-dark-theme {
+  --epr-bg-color: #303e54;
+  --epr-category-label-bg-color: #303e54;
 }
 
 @tailwind base;
@@ -25,20 +32,24 @@
   ::-webkit-scrollbar-track {
     @apply rounded-full bg-gray-50 dark:bg-gray-900;
   }
-  ::-webkit-input-placeholder { /* WebKit browsers */
+  ::-webkit-input-placeholder {
+    /* WebKit browsers */
     @apply normal-case;
   }
-  :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  :-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
     @apply normal-case;
   }
-  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+  ::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
     @apply normal-case;
   }
-  :-ms-input-placeholder { /* Internet Explorer 10+ */
+  :-ms-input-placeholder {
+    /* Internet Explorer 10+ */
     @apply normal-case;
   }
-  ::placeholder { /* Recent browsers */
+  ::placeholder {
+    /* Recent browsers */
     @apply normal-case;
   }
 }
-

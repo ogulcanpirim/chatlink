@@ -2,14 +2,15 @@ import { useAppSelector } from "../hooks/useAppSelector";
 import moreLogo from "../assets/three-dots.svg";
 import rightArrow from "../assets/right-arrow.svg";
 import {
-  clearSelectedChat,
-  toggleChatModal,
+  setChatModal,
+  setMessageSearchModal,
 } from "../store/reducers/pageReducer";
-
 import { useIsMobile } from "../hooks/isMobile";
 import { useAppDispatch } from "../store";
 import defaultAvatar from "../assets/default-avatar.png";
-import useCheckUserOnline from "../hooks/checkUserOnline";
+import useCheckUserOnline from "../hooks/useCheckUserOnline";
+import { setSelectedChat } from "../store/reducers/userReducer";
+import { memo } from "react";
 
 interface UserHeaderProps {
   name: string;
@@ -19,13 +20,15 @@ interface UserHeaderProps {
 }
 
 const UserHeader = ({ name, id, avatar, typing }: UserHeaderProps) => {
-  const { darkMode, chatModal } = useAppSelector((state) => state.page);
+  const { chatModal, messageSearchModal } = useAppSelector(
+    (state) => state.page
+  );
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
   const online = useCheckUserOnline(id);
 
   return (
-    <div className={`relative ${darkMode && "dark"}`}>
+    <div className="relative">
       <header>
         <nav className="shrink-0 bg-white drop-shadow-md border-gray-200 px-4 lg:px-6 py-2 dark:bg-gray-800">
           <div className="flex flex-wrap items-center mx-auto">
@@ -34,7 +37,7 @@ const UserHeader = ({ name, id, avatar, typing }: UserHeaderProps) => {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    dispatch(clearSelectedChat());
+                    dispatch(setSelectedChat(null));
                   }}
                   className="rounded-full p-2 cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
                 >
@@ -66,8 +69,13 @@ const UserHeader = ({ name, id, avatar, typing }: UserHeaderProps) => {
             </div>
             <div className="flex flex-row items-center ml-auto space-x-2">
               <button
-                onClick={() => {}}
-                className="rounded-full p-2 cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+                onClick={() => {
+                  !messageSearchModal && dispatch(setMessageSearchModal(true));
+                }}
+                className={`rounded-full p-2 cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 ${
+                  messageSearchModal &&
+                  "text-gray-900 bg-gray-100 dark:text-white dark:bg-gray-600"
+                }`}
               >
                 <svg
                   aria-hidden="true"
@@ -87,7 +95,7 @@ const UserHeader = ({ name, id, avatar, typing }: UserHeaderProps) => {
               <button
                 id="chatDropdown"
                 onClick={() => {
-                  dispatch(toggleChatModal());
+                  dispatch(setChatModal(true));
                 }}
                 className={`rounded-full p-2 cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 ${
                   chatModal &&
@@ -111,4 +119,4 @@ const UserHeader = ({ name, id, avatar, typing }: UserHeaderProps) => {
   );
 };
 
-export default UserHeader;
+export default memo(UserHeader);

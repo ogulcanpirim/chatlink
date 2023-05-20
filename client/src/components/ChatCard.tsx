@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import rightArrow from "../assets/right-arrow.svg";
-import { IChatListItem, setSelectedChat } from "../store/reducers/pageReducer";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../store";
 import defaultAvatar from "../assets/default-avatar.png";
-import useSocket from "../hooks/useSocket";
-import useCheckUserOnline from "../hooks/checkUserOnline";
+import useCheckUserOnline from "../hooks/useCheckUserOnline";
+import { IChatListItem, setSelectedChat } from "../store/reducers/userReducer";
+import socket from "../utils/socket";
 interface ChatCardProps {
   chat: IChatListItem;
   selected: boolean;
 }
-
 interface SocketTypeData {
   chat_id: string;
   user_id: string;
@@ -19,20 +18,17 @@ interface SocketTypeData {
 const ChatCard = ({ selected, chat }: ChatCardProps) => {
   const dispatch = useAppDispatch();
   const [typing, setTyping] = useState(false);
-  const { chatSearch } = useAppSelector((state) => state.page);
+  const { chatSearch } = useAppSelector((state) => state.user);
   const handleChatSelect = () => {
     dispatch(setSelectedChat(chat));
   };
-  const socket = useSocket();
   const userData = localStorage.getItem("user");
   const user_id = userData ? JSON.parse(userData)._id : null;
-  const otherUser = chat.users.find((user) => user._id !== user_id);
+  const otherUser = chat.users?.find((user) => user._id !== user_id);
   const online = useCheckUserOnline(otherUser?._id as string);
   const name = otherUser
     ? otherUser.firstName + " " + otherUser.lastName
     : "User";
-
-  //console.log(`${name} is ${online ? "online" : "offline"}`);
 
   useEffect(() => {
     if (socket) {
@@ -58,7 +54,7 @@ const ChatCard = ({ selected, chat }: ChatCardProps) => {
             key={i}
             className={`${
               part.toLowerCase() === highlight.toLowerCase() &&
-              "text-fuchsia-500"
+              "text-primary-500 dark:text-primary-400"
             }`}
             style={
               part.toLowerCase() === highlight.toLowerCase()
@@ -104,7 +100,13 @@ const ChatCard = ({ selected, chat }: ChatCardProps) => {
               typing && "italic"
             }`}
           >
-            {typing ? "Typing..." : chat.latestMessage?.content || "-"}
+            {typing
+              ? "Typing..."
+              : chat.latestMessage?.content || (
+                  <span className="italic">
+                    Click to chat with your friend!
+                  </span>
+                )}
           </p>
         </div>
         <img className="w-4 h-4" src={rightArrow} alt="Right Arrow" />
@@ -113,4 +115,4 @@ const ChatCard = ({ selected, chat }: ChatCardProps) => {
   );
 };
 
-export default React.memo(ChatCard);
+export default memo(ChatCard);

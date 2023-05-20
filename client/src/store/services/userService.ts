@@ -1,6 +1,6 @@
 import { IUserTags, LoginForm, RegisterForm } from "../../screens/Auth/Types";
 import { APIClient } from "../../utils/APIClient";
-import { AvatarForm } from "../reducers/authReducer";
+import { AvatarForm, IMessageAPI } from "../reducers/userReducer";
 
 export const LoginService = async (data: LoginForm) => {
   const response = await APIClient.post("/auth/login", data);
@@ -9,6 +9,23 @@ export const LoginService = async (data: LoginForm) => {
 
 export const RegisterService = async (data: RegisterForm) => {
   const response = await APIClient.post("/auth/register", data);
+  return response.data;
+};
+
+export const GetUserChatService = async (id: string) => {
+  const response = await APIClient.get(`/chat/${id}`);
+  return response.data;
+};
+
+export const GetChatMessagesService = async (id: string) => {
+  const response = await APIClient.get(`/message/${id}`);
+  return response.data;
+};
+
+export const SendChatMessageService = async (data: IMessageAPI) => {
+  const response = await APIClient.post(`/message/send/${data.chat_id}`, {
+    ...data,
+  });
   return response.data;
 };
 
@@ -43,13 +60,16 @@ export const UploadProfilePictureService = async (data: AvatarForm) => {
 };
 
 export const DeleteProfilePictureService = async (id: string) => {
-  const response = await APIClient.patch(`user/${id}/delete-avatar`);
+  const response = await APIClient.delete(`user/${id}/delete-avatar`);
   return response.data;
 };
 
-export const authService = {
+export const userService = {
   LoginService,
   RegisterService,
+  GetUserChatService,
+  GetChatMessagesService,
+  SendChatMessageService,
   SendFriendRequestService,
   AcceptFriendRequestService,
   RejectFriendRequestService,

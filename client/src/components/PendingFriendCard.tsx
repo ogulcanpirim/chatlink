@@ -1,19 +1,53 @@
-import React, { useState } from "react";
+import { memo, useRef, useState } from "react";
 import checkLogo from "../assets/check.svg";
 import cross from "../assets/cross.svg";
 import { Transition } from "@headlessui/react";
+import defaultAvatar from "../assets/default-avatar.png";
+import { useAppDispatch } from "../store";
+import {
+  AcceptFriendRequest,
+  RejectFriendRequest,
+} from "../store/actions/userActions";
+import { useAppSelector } from "../hooks/useAppSelector";
+interface PendingFriendCardProps {
+  avatar: string | null | undefined;
+  fullName: string;
+  email: string;
+  friendTag: string;
+}
 
-const PendingFriendCard = () => {
+type Operation = "accept" | "decline";
+
+const PendingFriendCard = ({
+  avatar,
+  fullName,
+  email,
+  friendTag,
+}: PendingFriendCardProps) => {
   const [show, setShow] = useState(true);
-
-  const height = document.getElementById("friendCard")?.clientHeight;
+  const operation = useRef<Operation | null>(null);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
 
   return (
     <Transition
       show={show}
       leave="transition-all ease-in-out duration-300 transform"
-      leaveFrom={`opacity-100 h-[${height}px] scale-100`}
+      leaveFrom={`opacity-100 h-[62px] scale-100`}
       leaveTo="opacity-0 h-0 scale-75"
+      afterLeave={() => {
+        if (user) {
+          const data = {
+            user_tag: user.tag,
+            friend_tag: friendTag,
+          };
+          if (operation.current === "accept") {
+            dispatch(AcceptFriendRequest(data));
+          } else if (operation.current === "decline") {
+            dispatch(RejectFriendRequest(data));
+          }
+        }
+      }}
     >
       <div
         id="friendCard"
@@ -22,15 +56,15 @@ const PendingFriendCard = () => {
         <div className="flex items-center">
           <img
             className="w-12 h-12 rounded-full"
-            src={`https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/f2/f2c80166a0aafda50418f306720ad1b7a9086759_full.jpg`}
+            src={avatar || defaultAvatar}
             alt="User Avatar"
           />
           <div className="ml-4">
             <div className="text-black dark:text-white text-md font-semibold">
-              {"Oğulcan Pirim"}
+              {fullName}
             </div>
             <div className="text-gray-500 dark:text-gray-400 text-sm">
-              {"opirim@gmail.com"}
+              {email}
             </div>
           </div>
         </div>
@@ -39,6 +73,7 @@ const PendingFriendCard = () => {
             className="mr-4"
             onClick={(e) => {
               e.preventDefault();
+              operation.current = "accept";
               show && setShow(false);
             }}
           >
@@ -51,7 +86,7 @@ const PendingFriendCard = () => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              console.log("decline");
+              operation.current = "decline";
               show && setShow(false);
             }}
           >
@@ -67,4 +102,4 @@ const PendingFriendCard = () => {
   );
 };
 
-export default React.memo(PendingFriendCard);
+export default memo(PendingFriendCard);

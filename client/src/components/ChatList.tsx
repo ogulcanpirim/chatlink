@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../hooks/useAppSelector";
 import ChatCard from "./ChatCard";
+import { setFriendTagModal } from "../store/reducers/pageReducer";
+import { useAppDispatch } from "../store";
 
 const ChatList = () => {
   const { selectedChat, chatList, chatSearch } = useAppSelector(
-    (state) => state.page
+    (state) => state.user
   );
   const [filteredChatList, setFilteredChatList] = useState(chatList);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (chatSearch) {
@@ -25,8 +28,18 @@ const ChatList = () => {
 
   if (filteredChatList.length === 0) {
     return (
-      <div className="flex h-full justify-center items-center">
-        <h1 className="text-lg font-semibold text-gray-500">No Chats Found</h1>
+      <div className="flex h-full justify-center items-center flex-col space-y-1">
+        <div className="text-xl font-semibold text-gray-500">
+          No Chats Found
+        </div>
+        <div
+          onClick={() => {
+            dispatch(setFriendTagModal(true));
+          }}
+          className="cursor-pointer text-md font-semibold text-primary-600 hover:underline dark:text-primary-500"
+        >
+          Add a Friend
+        </div>
       </div>
     );
   }
