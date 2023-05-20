@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+    server:
+      networks:
+       - ogulcan
+      ports:
+       - '3000:3000'
+      container_name: server
+      image: 'ogulcan/server:latest'
+
+networks:
+  ogulcan:
+   external: true

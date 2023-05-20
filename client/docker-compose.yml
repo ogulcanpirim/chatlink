@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+    client:
+      networks:
+       - ogulcan
+      ports:
+       - '8080:80'
+      container_name: client
+      image: 'ogulcan/client:latest'
+
+networks:
+  ogulcan:
+   external: true

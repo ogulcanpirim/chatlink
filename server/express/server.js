@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config();
-mongoose.connect("mongodb://localhost:2717", {
+mongoose.connect("mongodb://chatlink_mongo:27017", {
   useNewUrlParser: true,
 });
 
