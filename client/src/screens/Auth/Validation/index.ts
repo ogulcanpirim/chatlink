@@ -5,7 +5,7 @@ export const LoginValidationSchema = Yup.object().shape({
   password: Yup.string()
     .trim()
     .required("Required")
-    .min(8, "Too Short!")
+    .min(6, "Too Short!")
     .max(50, "Too Long!"),
   rememberMe: Yup.boolean().optional(),
 });
