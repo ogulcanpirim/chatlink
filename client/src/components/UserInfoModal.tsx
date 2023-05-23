@@ -33,7 +33,7 @@ const UserInfoModal = () => {
         }
       }
     },
-    [user]
+    [user, userModal]
   );
 
   if (!userModal) {
@@ -70,7 +70,10 @@ const UserInfoModal = () => {
             <div className="flex flex-col items-center pt-8">
               <div className="relative group">
                 <img
-                  src={userModal?.avatar || defaultAvatar}
+                  src={
+                    (loggedUser ? user?.avatar : userModal?.avatar) ||
+                    defaultAvatar
+                  }
                   alt="user avatar"
                   className={`object-cover rounded-full w-28 h-28 ${
                     loggedUser && "group-hover:opacity-40"
