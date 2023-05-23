@@ -10,6 +10,8 @@ COPY server.js ./
 COPY middleware ./middleware
 COPY models ./models
 COPY routes ./routes
+COPY public ./public
+COPY .env ./
 
 EXPOSE 3000
 CMD ["npm", "run", "start"]

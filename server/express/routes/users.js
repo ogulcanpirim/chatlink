@@ -6,7 +6,7 @@ import path from "path";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "../public/avatars/");
+    cb(null, "./public/avatars/");
   },
   filename: (req, file, cb) => {
     const id = req.params.id;
@@ -53,7 +53,7 @@ router.patch(
   upload.single("image"),
   getUser,
   async (req, res) => {
-    const newAvatar = `http://localhost:3000/public/avatars/${req.file.filename}`;
+    const newAvatar = `${process.env.API_URL}/public/avatars/${req.file.filename}`;
     res.user.avatar = newAvatar;
     try {
       await res.user.save();
