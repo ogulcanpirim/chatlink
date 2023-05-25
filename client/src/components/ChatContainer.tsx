@@ -31,6 +31,7 @@ import EmojiPicker, {
   Theme,
 } from "emoji-picker-react";
 import socket from "../utils/socket";
+import { useIsMobile } from "../hooks/isMobile";
 
 const MGS_CHAR_LIMIT = 1000;
 interface SocketTypeData {
@@ -47,6 +48,7 @@ const ChatContainer = () => {
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>(chatMessages);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (messageSearch) {
@@ -292,30 +294,32 @@ const ChatContainer = () => {
             </svg>
             <span className="sr-only">Upload image</span>
           </button>
-          <button
-            type="button"
-            className={`p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 ${
-              emojiModal &&
-              "bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white"
-            }`}
-            onClick={() => {
-              dispatch(setEmojiModal(!emojiModal));
-            }}
-          >
-            <svg
-              aria-hidden="true"
-              className="w-6 h-6"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+          {!isMobile && (
+            <button
+              type="button"
+              className={`p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 ${
+                emojiModal &&
+                "bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white"
+              }`}
+              onClick={() => {
+                dispatch(setEmojiModal(!emojiModal));
+              }}
             >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <span className="sr-only">Add emoji</span>
-          </button>
+              <svg
+                aria-hidden="true"
+                className="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+              <span className="sr-only">Add emoji</span>
+            </button>
+          )}
           <textarea
             id="chat"
             rows={1}
