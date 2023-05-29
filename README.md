@@ -1,6 +1,6 @@
-# ChatLink
+# [ChatLink](http://152.70.54.223/)
 
-This is my first MERN full-stack responsive chat application.
+This is my first MERN responsive chat application.
 
 ## 🖥️ Used Technologies
 
@@ -22,7 +22,6 @@ This is my first MERN full-stack responsive chat application.
 - User Avatars
 - Form Chat
 - Responsive Design
-- Skeleton Loaders
 
 ### My LinkedIn Profile
 
