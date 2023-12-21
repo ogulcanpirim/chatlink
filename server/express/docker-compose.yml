@@ -2,13 +2,13 @@ version: '3.3'
 services:
     server:
       networks:
-       - ogulcan
+       - chatlink_network
       ports:
        - '3000:3000'
        - '3001:3001'
       container_name: server
-      image: 'ogulcan/server:latest'
+      image: 'chatlink/server:latest'
 
 networks:
-  ogulcan:
+  chatlink_network:
    external: true

@@ -2,12 +2,12 @@ version: '3.3'
 services:
     client:
       networks:
-       - ogulcan
+       - chatlink_network
       ports:
        - '8080:80'
       container_name: client
-      image: 'ogulcan/client:latest'
+      image: 'chatlink/client:latest'
 
 networks:
-  ogulcan:
+  chatlink_network:
    external: true

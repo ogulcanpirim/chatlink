@@ -7,7 +7,7 @@ server/mongodb
 
 #local env files
 config.env
-server/express/.env
+#server/express/.env
 
 #Mac
 .DS_Store

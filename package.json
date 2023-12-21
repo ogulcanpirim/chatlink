@@ -4,10 +4,13 @@
   "main": "index.js",
   "scripts": {
     "client": "cd client && yarn && yarn dev",
-    "build": "cd client && yarn && yarn build",
-    "server": "cd server/express && yarn && yarn start",
+    "build-client": "cd client && yarn && yarn build",
+    "build-server": "docker build -t chatlink/server server/express",
+    "server": "docker compose -f server/express/docker-compose.yml up",
+    "server-down": "docker compose -f server/express/docker-compose.yml down",
     "mongo": "docker compose -f server/docker-compose.yml up -d",
-    "stop": "docker compose -f server/docker-compose.yml down"
+    "mongo-down": "docker compose -f server/docker-compose.yml down",
+    "create-network": "docker network create -d bridge chatlink_network"
   },
   "author": "Ogulcan Pirim",
   "license": "MIT",

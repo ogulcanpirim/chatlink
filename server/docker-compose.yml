@@ -2,7 +2,7 @@ version: '3.3'
 services:
     mongo:
       networks:
-       - ogulcan
+       - chatlink_network
       ports:
        - '2717:27017'
       volumes:
@@ -14,5 +14,5 @@ volumes:
  mongodb:
 
 networks:
- ogulcan:
+ chatlink_network:
    external: true
